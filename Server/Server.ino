@@ -2,6 +2,9 @@
 #include <driver/adc.h>
 #include <WiFi.h>
 #include <WiFiUDP.h>
+#include <Adafruit_AHTX0.h>
+#include <IRremote.h>
+
 
 #define ESP32
 
@@ -13,23 +16,40 @@
 #define RF_TRANSMIT_PORT 15
 #define OPTIONS_KEY_PORT 19
 #define SOUND_ANALOG_PORT 33
+#define IR_TRANSMIT 4
+#define IR_RECEIVE 34
+
+//Infrared
+IRrecv irrecv(IR_RECEIVE);
+decode_results results;
 
 //BLE UUIDs
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 #define SERVICE_UUID        "e03d88aa-6ed5-11eb-9439-0242ac130002"
-#define CHARACTERISTIC_UUID "f9357db8-6ed5-11eb-9439-0242ac130002"
+#define CHARACTERISTIC_UUID_RF "f9357db8-6ed5-11eb-9439-0242ac130002"
+#define CHARACTERISTIC_UUID_TEMP "2506d436-6e72-11ec-90d6-0242ac120003"
+#define CHARACTERISTIC_UUID_HUMIDITY "37aa7c46-6e72-11ec-90d6-0242ac120003"
+
+BLECharacteristic *pCharacteristicTemp;
+BLECharacteristic *pCharacteristicHumidity;
 
 //MIC ADC settings
-#define NO_OF_SAMPLES   4         //Multisampling
+#define NO_OF_SAMPLES   1        //Multisampling
 
 //Audio LED variables
 int checkDelay = 5000;
-int numOpModes = 5;
+int numOpModes = 6;
 uint32_t brightness = 100;
 
 //Button variables
 uint8_t pushButtonPreviousState = LOW;
+
+//Temperature and humidity sensor variables
+#define AHTX0_I2CADDR_DEFAULT 0x38
+#define AHT10_CHECK_INTERVAL 5000
+uint32_t aht10_last_checked = 0; 
+Adafruit_AHTX0 aht;
 
 WiFiUDP UDP;
 
@@ -47,12 +67,16 @@ struct heartbeat_message {
 struct heartbeat {
   IPAddress IP;
   bool connected;
-  unsigned long lastchecked;
+  uint32_t lastchecked;
 };
 
 struct heartbeat heartbeats[NUMBER_OF_CLIENTS];
 
 int opMode = 0;
+
+uint32_t analogRaw = 0;
+
+sensors_event_t humidity, temp;
 
 // 433mhz RF Codes
 bool rf_wall_buttonOn[] = {1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1};
@@ -163,29 +187,62 @@ class CharacteristicCallbacks: public BLECharacteristicCallbacks {
 };
 
 void setup() {
+
+  //Set serial baud rate
   Serial.begin(115200);
-  
+
+  //Initialize GPIO ports
   pinMode(RF_RECEIVE_PORT, INPUT);
   pinMode(RF_TRANSMIT_PORT, OUTPUT);
   pinMode(OPTIONS_KEY_PORT, INPUT);
   pinMode(SOUND_ANALOG_PORT, INPUT);
+  pinMode(IR_RECEIVE, INPUT);
+  pinMode(IR_TRANSMIT, OUTPUT);
 
   //Mic ADC Setup
   adc_setup();
+
+  //IR Receiver setup
+  irrecv.enableIRIn();
 
   //BLE Setup
   BLEDevice::init("dynamicLights");
   BLEServer *pServer = BLEDevice::createServer();
   pServer->setCallbacks(new ServerCallbacks());
   BLEService *pService = pServer->createService(SERVICE_UUID);
-  BLECharacteristic *pCharacteristic = pService->createCharacteristic(
-                                          CHARACTERISTIC_UUID,
+  BLECharacteristic *pCharacteristicRF = pService->createCharacteristic(
+                                          CHARACTERISTIC_UUID_RF,
                                           BLECharacteristic::PROPERTY_READ |
                                           BLECharacteristic::PROPERTY_WRITE | 
                                           BLECharacteristic::PROPERTY_WRITE_NR
   );
 
-  pCharacteristic->setCallbacks(new CharacteristicCallbacks());
+  pCharacteristicTemp = pService->createCharacteristic(
+                                          CHARACTERISTIC_UUID_TEMP,
+                                          BLECharacteristic::PROPERTY_NOTIFY
+  );
+
+  BLEDescriptor pDescriptorTemp(BLEUUID((uint16_t)0x2902));
+  pCharacteristicTemp->addDescriptor(&pDescriptorTemp);
+
+  pCharacteristicHumidity = pService->createCharacteristic(
+                                          CHARACTERISTIC_UUID_HUMIDITY,
+                                          BLECharacteristic::PROPERTY_NOTIFY
+  );
+
+  BLEDescriptor pDescriptorHumidity(BLEUUID((uint16_t)0x2903));
+  pCharacteristicHumidity->addDescriptor(&pDescriptorHumidity);
+
+  // set temperature BLE characteristic
+  pService->addCharacteristic(pCharacteristicTemp);
+  pCharacteristicTemp->addDescriptor(&pDescriptorTemp);
+  
+  // set humidity  BLE characteristic
+  pService->addCharacteristic(pCharacteristicHumidity);
+  pCharacteristicTemp->addDescriptor(&pDescriptorHumidity);
+
+
+  pCharacteristicRF->setCallbacks(new CharacteristicCallbacks());
   
   pService->start();
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
@@ -204,56 +261,90 @@ void setup() {
   Serial.println(WiFi.softAPIP());
   UDP.begin(7171); 
 
-  //HeartBeats initialization
+  //HeartBeats initialization, zero all clients
   initHeartBeats();
+
+  //init aht
+   while (! aht.begin()) {
+    Serial.println("Could not find AHT. Check wiring...");
+    delay(1000);
+  }
+  Serial.println("AHT10 found");
   
 }
 
 void loop() {
-  uint32_t analogRaw;
-  
+
+  // bluetooth commands
   if (bleDeviceConnected) {
      if(bleCommand == 1) {wallLedPowerOn();bleCommand=0;rf_wall_led_on=true;Serial.println("Led On");}
      if(bleCommand == 2) {wallLedPowerOff();bleCommand=0;rf_wall_led_on=false;Serial.println("Led Off");}
   }
 
-  invalidateHeartBeats();
-  readHeartBeats();
+  // ir receive - logged to serial console only
+  if (irrecv.decode(&results)) {
+        Serial.print("IR Received: ");
+        Serial.println(results.value, HEX);
+        irrecv.resume(); // Prepare for receiving the next value
+  }
 
+  // handle push button state
   int pushButtonState = digitalRead(OPTIONS_KEY_PORT);
   if ( pushButtonState != pushButtonPreviousState) { 
       if(pushButtonState == HIGH) buttonClicked();
       pushButtonPreviousState = pushButtonState;
-  } 
+  }
 
-    //if (rf_wall_led_on == false) {
-    //  wallLedPowerOn();
-    //  rf_wall_led_on = true;
-    //} else
-    //{
-    //  wallLedPowerOff();
-    //  rf_wall_led_on = false;
-    //}
+  // temperature and humidity sensor
+  if(aht10_last_checked < millis() - AHT10_CHECK_INTERVAL) {
+    //read temp and humidity
+    aht.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
+    Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.println(" degrees C");
+    pCharacteristicTemp->setValue(temp.temperature);
+    pCharacteristicTemp->notify();
+    Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.println("% rH");
+    pCharacteristicHumidity->setValue(humidity.relative_humidity);
+    pCharacteristicHumidity->notify();
+    
+    aht10_last_checked = millis();
+  }
     
   switch (opMode) {
     case 0:
+      //background lightning only
+      invalidateHeartBeats();
+      readHeartBeats();
       sendLedData(brightness, opMode);
-      break;
+      break;    
     case 1:
-      //analogRaw = read_adc_idf();
+      //turn off lamps and do not send data
+      break;
+    case 2:
+      //dynamic lights
+      invalidateHeartBeats();
+      readHeartBeats();
       analogRaw = analogRead(SOUND_ANALOG_PORT);
       sendLedData(analogRaw, opMode);
       break;
-    case 2:
-      sendLedData(brightness, opMode);
-      break;
+    //light modes - opMode 3-6
     case 3:
+      invalidateHeartBeats();
+      readHeartBeats();
       sendLedData(brightness, opMode);
       break;
     case 4:
+      invalidateHeartBeats();
+      readHeartBeats();
       sendLedData(brightness, opMode);
       break;
     case 5:
+      invalidateHeartBeats();
+      readHeartBeats();
+      sendLedData(brightness, opMode);
+      break;
+    case 6:
+      invalidateHeartBeats();
+      readHeartBeats();
       sendLedData(brightness, opMode);
       break;
   }
@@ -265,11 +356,11 @@ void sendLedData(uint32_t data, uint8_t op_mode)
  struct led_command send_data;
  send_data.opmode = op_mode; 
  send_data.data = data; 
- for (int i = 0; i < NUMBER_OF_CLIENTS; i++) 
+ for (int i = 0; i < NUMBER_OF_CLIENTS - 1; i++) 
  {
     if(heartbeats[i].connected == true) { 
       UDP.beginPacket(heartbeats[i].IP, 7001); 
-      UDP.write((const uint8_t*)&send_data,sizeof(struct led_command));
+      UDP.write((const uint8_t*)&send_data,sizeof(send_data));
       UDP.endPacket();
     }
  }
@@ -286,28 +377,25 @@ void initHeartBeats() {
 
 void readHeartBeats() {
   struct heartbeat_message hbm;
- while(true) {
   int packetSize = UDP.parsePacket();
-  if (!packetSize) {
-    break;
+  if (packetSize == sizeof(hbm)) {
+    UDP.read((char *)&hbm, sizeof(hbm));
+    if (hbm.client_id > NUMBER_OF_CLIENTS - 1) {
+      Serial.printf("Error: invalid client_id received: %d", hbm.client_id);
+    } else {
+      if (heartbeats[hbm.client_id].connected == false) Serial.printf("Client with ID: %d and IP: %s is now connected.\n", hbm.client_id, heartbeats[hbm.client_id].IP.toString());
+      heartbeats[hbm.client_id].IP = hbm.IP;
+      heartbeats[hbm.client_id].connected = true;
+      heartbeats[hbm.client_id].lastchecked = millis();
+    }
   }
-  UDP.read((char *)&hbm, sizeof(struct heartbeat_message));
-  if (hbm.client_id > NUMBER_OF_CLIENTS) {
-    Serial.println("Error: invalid client_id received");
-    continue;
-  } else {
-    if (heartbeats[hbm.client_id - 1].connected == false) Serial.printf("Client with ID: %d and IP: %s is now connected.\n", hbm.client_id, heartbeats[hbm.client_id -1].IP.toString());
-    heartbeats[hbm.client_id - 1].IP = hbm.IP;
-    heartbeats[hbm.client_id - 1].connected = true;
-    heartbeats[hbm.client_id - 1].lastchecked = millis();
-  }
- }
 }
 
 void invalidateHeartBeats() {
-  for (int i = 0; i < NUMBER_OF_CLIENTS; i++) {
+  for (int i = 0; i < NUMBER_OF_CLIENTS - 1; i++) {
+    // Invalidate heartbeat if checkDelay is passed
     if ((millis() - heartbeats[i].lastchecked > checkDelay) && heartbeats[i].connected == true)  {
-        Serial.printf("HeartBeat not received for Client with ID: %d and IP: %s \n", i+1, heartbeats[i].IP.toString());
+        Serial.printf("Invalidating HB. Current time is: %d. HB last received for Client with ID: %d and IP: %s at: %d \n",millis(), i, heartbeats[i].IP.toString(), heartbeats[i].lastchecked);
         heartbeats[i].connected = false;
     }
   }
