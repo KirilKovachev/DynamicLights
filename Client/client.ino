@@ -17,7 +17,7 @@
 #define BUFFER_DEVIATION 10
 #define BUFFER_SIZE 3
 
-#define LAMP_ID 1
+#define LAMP_ID 0
 WiFiUDP UDP;
 
 const char *ssid = "dynamicLights"; // The SSID (name) of the Wi-Fi network you want to connect to
@@ -98,7 +98,7 @@ void sendHeartBeat() {
     IPAddress ip(192,168,4,1);
     UDP.beginPacket(ip, 7171); 
     int ret = UDP.write((char*)&hbm,sizeof(hbm));
-    printf("Returned: %d, also sizeof hbm: %d \n", ret, sizeof(hbm));
+    printf("Sent heartbeat with size of hbm: %d \n", sizeof(hbm));
     UDP.endPacket();
     lastHeartBeatSent = millis();
 }

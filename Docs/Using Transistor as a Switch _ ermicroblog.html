@@ -1,0 +1,933 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0034)http://www.ermicro.com/blog/?p=423 -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="verify-v1" content="/EzWYltsvBs9+FvRIZCSc9Oc36JbcUrGBtq5lNHfWyU=">
+<link rel="stylesheet" type="text/css" href="./Using Transistor as a Switch _ ermicroblog_files/style.css">
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://www.ermicro.com/blog/?feed=rss2">
+<link rel="alternate" type="text/xml" title="RSS .92" href="http://www.ermicro.com/blog/?feed=rss">
+<link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="http://www.ermicro.com/blog/?feed=atom">
+<link rel="pingback" href="http://www.ermicro.com/blog/xmlrpc.php">
+<link rel="icon" href="http://www.ermicro.com/blog/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://www.ermicro.com/blog/favicon.ico" type="image/x-icon">
+
+<title>Using Transistor as a Switch | ermicroblog</title>
+
+<!-- All in One SEO Pack 2.2.7.2 by Michael Torbert of Semper Fi Web Design[1039,1145] -->
+<meta name="description" content="Most of microcontrollers work within 5 volt environment and the I/O port can only handle current up to 20mA; therefore if we want to attach the">
+
+<meta name="keywords" content="attiny25,darlington,h-bridge,resistor,transistor,uln2803a">
+
+<!-- /all in one seo pack -->
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="ermicroblog » Using Transistor as a Switch Comments Feed" href="http://www.ermicro.com/blog/?feed=rss2&amp;p=423">
+		<script type="text/javascript" async="" src="./Using Transistor as a Switch _ ermicroblog_files/ga.js.download"></script><script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/www.ermicro.com\/blog\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.8.17"}};
+			!function(t,a,e){var r,i,n,o=a.createElement("canvas"),l=o.getContext&&o.getContext("2d");function c(t){var e=a.createElement("script");e.src=t,e.defer=e.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(e)}for(n=Array("flag","emoji4"),e.supports={everything:!0,everythingExceptFlag:!0},i=0;i<n.length;i++)e.supports[n[i]]=function(t){var e,a=String.fromCharCode;if(!l||!l.fillText)return!1;switch(l.clearRect(0,0,o.width,o.height),l.textBaseline="top",l.font="600 32px Arial",t){case"flag":return(l.fillText(a(55356,56826,55356,56819),0,0),e=o.toDataURL(),l.clearRect(0,0,o.width,o.height),l.fillText(a(55356,56826,8203,55356,56819),0,0),e===o.toDataURL())?!1:(l.clearRect(0,0,o.width,o.height),l.fillText(a(55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447),0,0),e=o.toDataURL(),l.clearRect(0,0,o.width,o.height),l.fillText(a(55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447),0,0),e!==o.toDataURL());case"emoji4":return l.fillText(a(55358,56794,8205,9794,65039),0,0),e=o.toDataURL(),l.clearRect(0,0,o.width,o.height),l.fillText(a(55358,56794,8203,9794,65039),0,0),e!==o.toDataURL()}return!1}(n[i]),e.supports.everything=e.supports.everything&&e.supports[n[i]],"flag"!==n[i]&&(e.supports.everythingExceptFlag=e.supports.everythingExceptFlag&&e.supports[n[i]]);e.supports.everythingExceptFlag=e.supports.everythingExceptFlag&&!e.supports.flag,e.DOMReady=!1,e.readyCallback=function(){e.DOMReady=!0},e.supports.everything||(r=function(){e.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",r,!1),t.addEventListener("load",r,!1)):(t.attachEvent("onload",r),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&e.readyCallback()})),(r=e.source||{}).concatemoji?c(r.concatemoji):r.wpemoji&&r.twemoji&&(c(r.twemoji),c(r.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./Using Transistor as a Switch _ ermicroblog_files/wp-emoji-release.min.js.download" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="wp-pagenavi-css" href="./Using Transistor as a Switch _ ermicroblog_files/pagenavi-css.css" type="text/css" media="all">
+<link rel="https://api.w.org/" href="http://www.ermicro.com/blog/index.php?rest_route=/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.ermicro.com/blog/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.ermicro.com/blog/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="Introduction to the Microchip PIC C Programming" href="http://www.ermicro.com/blog/?p=365">
+<link rel="next" title="Controlling DC motor with AVR ATtiny13 PWM and ADC Project" href="http://www.ermicro.com/blog/?p=479">
+<link rel="canonical" href="http://www.ermicro.com/blog/?p=423">
+<link rel="shortlink" href="http://www.ermicro.com/blog/?p=423">
+<link rel="alternate" type="application/json+oembed" href="http://www.ermicro.com/blog/index.php?rest_route=%2Foembed%2F1.0%2Fembed&amp;url=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423">
+<link rel="alternate" type="text/xml+oembed" href="http://www.ermicro.com/blog/index.php?rest_route=%2Foembed%2F1.0%2Fembed&amp;url=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423&amp;format=xml">
+<script type="text/javascript">
+	window._wp_rp_static_base_url = 'http://wprp.zemanta.com/static/';
+	window._wp_rp_wp_ajax_url = "http://www.ermicro.com/blog/wp-admin/admin-ajax.php";
+	window._wp_rp_plugin_version = '3.2';
+	window._wp_rp_post_id = '423';
+	window._wp_rp_num_rel_posts = '5';
+</script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-6112509-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</head>
+
+<body _c_t_common="1" _c_t_j1="1">
+
+<div id="wrap">
+<div id="header">
+    <div id="headerimg">
+		<h1><a href="http://www.ermicro.com/blog/"><span style="color:#8080ff">ermicroblog</span></a></h1>
+		<div class="description">Microcontrollers and Electronics Project Blog</div>
+	</div>
+</div>
+<div id="menu">
+<ul>
+<li class="page_item current_page_item"><a href="http://www.ermicro.com/blog">Home</a></li>
+<li class="page_item page-item-2"><a href="http://www.ermicro.com/blog/?page_id=2">About</a></li>
+<li class="page_item page-item-809"><a href="http://www.ermicro.com/blog/?page_id=809">Copyright and Disclaimer</a></li>
+<li class="page_item page-item-2318"><a href="http://www.ermicro.com/blog/?page_id=2318">e-Books</a></li>
+<li class="page_item page-item-419"><a href="http://www.ermicro.com/blog/?page_id=419">Contact Us</a></li>
+</ul>
+</div>
+<div id="content_wrap">
+<div id="content">
+
+<h1><span style="color:#0060FA">Blog Entry</span></h1>
+
+<!-- Start Google Unit Adsense  -->
+<br>
+<script type="text/javascript"><!--
+google_ad_client = "pub-9787882570656893";
+/* 468x15, created 3/13/09 */
+google_ad_slot = "5525125550";
+google_ad_width = 468;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript" src="./Using Transistor as a Switch _ ermicroblog_files/f.txt">
+</script>
+
+<br><br>
+<!-- End Google Unit Adsense  -->
+
+
+<h2 class="title"><a href="http://www.ermicro.com/blog/?p=423" rel="bookmark" title="Using Transistor as a Switch">Using Transistor as a Switch</a></h2>
+<h4>December 23, 2008 by <a href="http://www.ermicro.com/blog/?author=2" title="Posts by rwb" rel="author">rwb</a>, under <a href="http://www.ermicro.com/blog/?cat=3" rel="category">Electronics</a>.</h4>
+<br>
+
+<!-- Start Google Adsense  -->
+<br>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-9787882570656893";
+/* 468x60, created 9/28/09 */
+google_ad_slot = "9374687509";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript" src="./Using Transistor as a Switch _ ermicroblog_files/f.txt">
+</script>
+
+<br>
+<!-- End Google Adsense -->
+
+<p>Most of microcontrollers work within 5 volt environment and the I/O port can only handle current up to 20mA; therefore if we want to attach the microcontroller’s I/O port to different voltage level circuit or to drive devices with more than 20mA; we need to use the interface circuit. One of the popular method is to use the Bipolar Junction Transistor (BJT) or we just called it transistor in this tutorial.<span id="more-423"></span> I have to make clear on this BJT type to differentiate among the other types of transistors family such as FET (Field Effect Transistor), MOSFET (Metal Oxide Semiconductor FET), VMOS (Vertical MOSFET) and UJT (Uni-Junction Transistor).</p>
+<p><strong>A. The Switch</strong></p>
+<p>The transistor actually works as a current gainer; any current applied to the base terminal will be multiplied by the current gain factor of the transistor which known as <strong>h<sub>FE</sub></strong>. Therefore transistor can be used as amplifier; any small signal (very small current) applied to the base terminal will be amplified by the factor of h<sub>FE</sub> and reflected as a collector current on the collector terminal side.</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw01.jpg"><img class="alignnone size-full wp-image-424" title="trsw01" src="./Using Transistor as a Switch _ ermicroblog_files/trsw01.jpg" alt="" width="595" height="306"></a></p>
+<p>All the transistors have three state of operation:</p>
+<ol>
+<li><strong>Off state</strong>: in this state there is no base current applied or <strong>I<sub>B</sub> = 0</strong>.</li>
+<li><strong>On active state</strong>: in this state any changes in I<sub>B</sub> will cause changes in I<sub>C</sub> as well or <strong>I<sub>C</sub> = I<sub>B</sub> x h<sub>FE</sub></strong>. This type of state is suitable when we use transistor as a signal amplifier because transistor is said is in the linear state. For example if we have a transistor with gain of 100 and we increase the I<sub>B</sub> from 10uA to 100uA; this will cause the I<sub>C</sub> to swing from 1000uA to 10000uA (1 mA to 10 mA).</li>
+<li><strong>On saturate state</strong>: in this state any changes in I<sub>B</sub> will not cause changes in I<sub>C</sub> anymore (not linear) or we could say I<sub>C</sub> is nearly constant. We never use this state to run the transistor as a signal amplifier (class A amplifier) because the output signal will be clamped when the transistor is saturate. This is the type of state that we are looking for on this tutorial.</li>
+</ol>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw02.jpg"><img class="alignnone size-full wp-image-425" title="trsw02" src="./Using Transistor as a Switch _ ermicroblog_files/trsw02.jpg" alt="" width="593" height="267"></a></p>
+<p>From the picture above we could see the voltage and current condition of transistor on each state; if you notice when transistor is in off state the voltage across collector and emitter terminal is equal to the supplied voltage, this is equivalent to the open circuit and when transistor is in saturate state the collector to emitter voltage is equal or less then 0.2 Volt which is equivalent to the close circuit. Therefore to use transistor as a switch we have to make transistor <strong>OFF</strong> which equivalent to the logical “<strong>0</strong>” and <strong>SATURATE</strong> which is equivalent to the logical “<strong>1</strong>“.</p>
+<p>One of the famous diagrams that show the transistor operating state is called the transistor static characteristic curve as shown on this following picture:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw24.jpg"><img class="alignnone size-full wp-image-1746" title="trsw24" src="./Using Transistor as a Switch _ ermicroblog_files/trsw24.jpg" alt="" width="577" height="455"></a></p>
+<p>When we operate transistor as the class A common emitter amplifier usually we choose to bias the transistor (apply voltage on V<sub>BE</sub> and V<sub>CE</sub>) in such a way (Q-Point) that I<sub>C</sub> and V<sub>CE</sub> (output) will swing to its maximum or minimum value without any distortion (swing into the saturation or cut-off region) when the I<sub>B</sub> (input) swing to its maximum or minimum value; but when we operate the transistor as switch we intentionally push the transistor into its saturation region to get the lowest possible V<sub>CE</sub> (i.e. near 0.2 volt) when we need to make the transistor ON (switch ON) and into its cut-off region when we need to make the transistor OFF (switch OFF).</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw03.jpg"><img class="alignnone size-full wp-image-426" title="trsw03" src="./Using Transistor as a Switch _ ermicroblog_files/trsw03.jpg" alt="" width="601" height="307"></a></p>
+<p>The above diagram show a typical microcontroller interface circuit using NPN transistor; the <strong>RB</strong> resistor is used to control the current on base terminal that make transistor <strong>OFF</strong> and <strong>ON</strong> (saturate); while the <strong>RC </strong>resistor is the current limiter for the load. if the load operate with the same voltage as the supplied power (<strong>Vcc</strong>) you can by pass the <strong>RC</strong> (not use).</p>
+<p>Notice the diode (also known as the clamp diode) in the inductive load circuit is needed to protect the transistor again the EMF (Electromotive Force) voltage generated by the inductor component when the transistor is switched on and off rapidly, this voltage is oppose the source voltage. The diode will act as a short circuit to the high voltage generated by the inductor component, you can use any general purpose diode with capable on handling minimum 1 A of current such as 1N4001, 1N4002, etc.</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw29.jpg"><img class="alignnone size-full wp-image-2139" title="trsw29" src="./Using Transistor as a Switch _ ermicroblog_files/trsw29.jpg" alt="" width="584" height="346" srcset="http://www.ermicro.com/blog/wp-content/uploads/2011/09/trsw29.jpg 866w, http://www.ermicro.com/blog/wp-content/uploads/2011/09/trsw29-300x178.jpg 300w" sizes="(max-width: 584px) 100vw, 584px"></a></p>
+<p>On the picture shown above you could see how we connect the transistor as the high active switch (logical high) also known as <em>low side switch</em> using NPN transistor and the low active switch (logical low) also known as <em>high side switch</em> using PNP transistor.</p>
+<p>Ok let’s calculate each of the <strong>RB</strong> and <strong>RC</strong> value on this following NPN transistor circuit:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw04.jpg"><img class="alignnone size-full wp-image-427" title="trsw04" src="./Using Transistor as a Switch _ ermicroblog_files/trsw04.jpg" alt="" width="587" height="360" srcset="http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw04.jpg 580w, http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw04-300x183.jpg 300w" sizes="(max-width: 587px) 100vw, 587px"></a></p>
+<p>On the circuit above we are going to use 2N3904 (the cheap general purpose transistor where you could easily found on your local market) to drive 5 LED from microcontroller port, from the 2N3904 datasheet we get this following information:</p>
+<p>I<sub>C</sub> max = 200mA (this is maximum value that will make your transistor smoked, in practical application always use just half of the maximum value mentioned on the datasheet), h<sub>FE</sub> = 100 to 300, V<sub>BE</sub> saturate = 0.65 Volt, V<sub>CE</sub> saturate = 0.2 Volt</p>
+<p>For most transistor in general we can use V<sub>BE</sub> = 0.7 Volt (should be saturate) and V<sub>CE</sub> = 0 Volt. Using the 5 volt power supply (V<sub>CC</sub>) and assuming V<sub>LED</sub> = 2 Volt, with each of them consuming 15 mA, we could calculate the RC value using the Ohm’s law as follow:</p>
+<p>I<sub>C</sub> = 5 x 15 mA = <strong>75mA (0.075 A)</strong>, this current is still far bellow the maximum I<sub>C</sub> allowed by 2N3904 transistor.</p>
+<p>RC = (V<sub>CC</sub> – V<sub>LED</sub>) / I<sub>C</sub> = (5 – 2) / 0.075 = <strong>40 Ohm</strong></p>
+<p>Power Dissipation on the RC resistor will be</p>
+<p>P = (V<sub>CC</sub> – V<sub>LED</sub>) x I<sub>C</sub> = (5 – 2) x 0.075 = <strong>0.225 Watt</strong></p>
+<p>Base on the above calculation we could use the nearest higher value available on the market; which is <strong>47 Ohm</strong>,<strong> 0.5 watt resistor</strong> (for heat dissipation usually we use twice of the watt value calculated).</p>
+<p>Assuming the <strong>h<sub>FE</sub></strong> minimum is 100; the minimum current required in the transistor’s base terminal to drive the LED is:</p>
+<p>I<sub>C</sub> = h<sub>FE</sub> x I<sub>B</sub><br>
+I<sub>B</sub> = I<sub>C</sub> / h<sub>FE</sub> = 0.075 / 100 = <strong>0.00075 A (0.75 mA) </strong></p>
+<p>This current can easily be supplied by most microcontroller I/O port; which is capable to drive up to 20 mA output current. Again by applying the Ohm’s law we could calculate the RB value as follow:</p>
+<p>RB = (V<sub>PORT</sub> – V<sub>BE</sub>) / I<sub>B</sub></p>
+<p>Assuming the minimum average voltage of microcontroller I/O port (V<sub>PORT</sub>) with logical “<strong>1</strong>” is about 4.2 volt (the microcontroller is powered by 5 volt supply):</p>
+<p>RB = (4.2 – 0.7) / 0.00075 = <strong>4666.66 Ohm</strong></p>
+<p>Power dissipation on the RC resistor will be</p>
+<p>P = (V<sub>PORT</sub> – V<sub>BE</sub>) x I<sub>B</sub> = (4.2 – 0.7) x 0.00075 = <strong>0.002625 Watt</strong></p>
+<p>Base on the result you could use <strong>4K7 Ohm</strong>, <strong>0.25 Watt</strong> resistor (this is the common resistor which you could easily found on the local market i.e. <strong>0.25</strong> watt and <strong>0.5</strong> watt).</p>
+<p>Use this <strong>RB</strong> calculation as your maximum reference value; in the real world most of the transistors <strong>h<sub>FE </sub></strong> is vary and being measured (tested) with different <strong>V<sub>CE</sub></strong> and <strong>I<sub>C </sub></strong>value not to mention different specification even though you use the same transistor type. Therefore the real <strong>RB</strong> value could be lower than 4K7 if you really want to drive the transistor into its fully saturate mode where the <strong>V<sub>CE</sub></strong> near 0.2 volt.</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw16.jpg"><img class="alignnone size-full wp-image-1440" title="trsw16" src="./Using Transistor as a Switch _ ermicroblog_files/trsw16.jpg" alt="" width="581" height="261"></a></p>
+<p>Now the question is how we determine the exact value? To answer to this question I build this following testing circuit base on the <strong>RC</strong> and <strong>RB</strong> calculated value above using the Atmel AVR ATTiny25 microcontroller to blink the five LED:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw18.jpg"><img class="alignnone size-full wp-image-1443" title="trsw18" src="./Using Transistor as a Switch _ ermicroblog_files/trsw18.jpg" alt="" width="574" height="411" srcset="http://www.ermicro.com/blog/wp-content/uploads/2009/11/trsw18.jpg 811w, http://www.ermicro.com/blog/wp-content/uploads/2009/11/trsw18-300x215.jpg 300w" sizes="(max-width: 574px) 100vw, 574px"></a></p>
+<p><span style="text-decoration: underline;">Note:</span> the reason I used RC = 3×150 Ohm because at that time I run out the required 47 Ohm resistor, therefore you could use just single 47 Ohm resistor or if you only have 150 Ohm as I did, you could use them as I did.</p>
+<p><a title="Using Transistor as a Switch by ermicroinfo, on Flickr" href="http://www.flickr.com/photos/33738505@N05/4119269003/"><img src="./Using Transistor as a Switch _ ermicroblog_files/4119269003_230bbb98eb.jpg" alt="Using Transistor as a Switch" width="575" height="430"></a></p>
+<p>Bellow is the C Program that I used to test this circuit:</p>
+<pre>//***************************************************************************
+//  File Name	  : trswitch.c
+//  Version	  : 1.0
+//  Description   : Transistor as Switch: Simple LED Blinker
+//  Author  	  : RWB
+//  Target  	  : Atmel AVR ATTiny25 Microcontroller
+//  Compiler      : AVR-GCC 4.3.0; avr-libc 1.6.2 (WinAVR 20090313)
+//  IDE           : Atmel AVR Studio 4.17
+//  Programmer    : Atmel AVRISPmkII
+//  Last Updated  : 1 November 2009
+//***************************************************************************
+#include &lt;avr/io.h&gt;
+#include &lt;util/delay.h&gt;</pre>
+<pre>int main(void)
+{
+   // Initial I/O
+   DDRB |= (1&lt;&lt;PB3);       // Set PB3 as Output, Others as Input
+   PORTB &amp;= ~(1&lt;&lt;PB3);     // Reset the PB3
+
+   for(;;) {               // Loop Forever
+     PORTB |= (1&lt;&lt;PB3);    // Port PB3 High
+     _delay_ms(3000);      // Delay 3 Second
+     PORTB &amp;= ~(1&lt;&lt;PB3);   // Port PB3 Low
+     _delay_ms(1000);      // Delay 1 Second
+   }
+   return 0;	           // Standard Return Code
+}</pre>
+<pre>/* EOF: trswitch.c */</pre>
+<p>The program simply blink all the LED by toggling the AVR ATTiny25 microcontroller <strong>PB3</strong> output port high for about 3 second and low for about 1 second and here is the test result when the <strong>PB3</strong> port swing to the logical high:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw19.jpg"><img class="alignnone size-full wp-image-1444" title="trsw19" src="./Using Transistor as a Switch _ ermicroblog_files/trsw19.jpg" alt="" width="576" height="210" srcset="http://www.ermicro.com/blog/wp-content/uploads/2009/11/trsw19.jpg 912w, http://www.ermicro.com/blog/wp-content/uploads/2009/11/trsw19-300x109.jpg 300w" sizes="(max-width: 576px) 100vw, 576px"></a></p>
+<p>As you’ve seen from the result there is about <strong>0.4</strong> volt drop on the collector to emitter (V<sub>CE</sub>) terminal instead of <strong>0</strong> Volt as we assume on the above calculation and the DC current gain is about <strong>58</strong> instead of <strong>100</strong> again as we assume on the above calculation. Now you understand there are tremendous different result between the 2N3904 transistor datasheet and my test circuit, this is because the 2N3904 datasheet is measured using the PWM (Pulse Width Modulation) with period for about <strong>300 us</strong> (micro second) and duty cycle for about <strong>2%</strong>, the reason to use this very short pulse period method in the measurement is because they don’t want to overheat the transistor junction; where this junction heating will vary the transistor <strong>hFE</strong> measurement significantly.</p>
+<p>On my test circuit above; I used 3 second to make the 2N3904 transistor ON (saturate, V<sub>BE</sub> = 0.81 Volt, V<sub>CE</sub> = 0.4 Volt) and 1second to make it OFF. The other factor that make the test result differ is the various manufacture specification even though we used the same transistor type. Therefore the answer to the above question is; there is no exact value for <strong>RC</strong> and <strong>RB</strong>; is depend on your application but it save to use the above method to calculate the <strong>RC</strong> and <strong>RB</strong> and then do the circuit prototyping to test your design, next adjust your <strong>RC</strong> and <strong>RB</strong> value accordingly.</p>
+<p>Some calculation suggestion is to use the collector to base current ratio of <strong>10</strong> (regardless of the transistor <strong>hFE</strong> value) to force the transistor into fully saturate (V<sub>CE</sub> = 0.2 Volt, as shown on the datasheet above) by using this following formula:</p>
+<p><strong>I<sub>B</sub> = I<sub>C</sub> / h<sub>FE = </sub>I<sub>C</sub> / 10</strong></p>
+<p>This is what I called a “<strong>maximum saturate calculation method</strong>” (also known as worst-case design procedure), again as you’ve seen from the real test circuit result above even though we drive the V<sub>BE</sub> more than 0.7 volt, we still get the hFE for about 58 and I<sub>B </sub>for about 0.88 mA which is useful in the microcontroller application (for more information you could read&nbsp; “<a title="Powering Your Microcontroller’s Base Project" href="http://www.ermicro.com/blog/?p=820" target="_blank">Powering Your Microcontroller’s Base Project</a>” on this blog), therefore for practical application I would suggest; if you want to use this maximum saturate calculation method to determine the base resistor (<strong>RB</strong>) value, make sure at least you double the calculated value. For example to determine the <strong>RB</strong> on the test circuit above using this maximum saturate calculation method:</p>
+<p>I<sub>B</sub> = I<sub>C</sub> / h<sub>FE</sub> = 0.075 / 10 = <strong>0.0075 A (7.5 mA)<br>
+</strong>RB = (4.2 – 0.7) / 0.0075 = <strong>466.66 Ohm</strong></p>
+<p>By using twice the calculated value you will get <strong>933.32 Ohm</strong>, or you could use the <strong>1K Ohm</strong> standard resistor.</p>
+<p>In typical rapid switching transistor application actually we don’t drive the transistor into its full saturate state (i.e. V<sub>CE</sub> = 0.2 Volt),&nbsp; because when the transistor is fully saturate, it tend to have a longer switching time (i.e. from ON to OFF to ON again). The V<sub>CE</sub> = 0.4 volt as shown on the real test circuit above is already adequate for most switching application, while we could still take advantage of the low transistor base current (i.e. I<sub>B</sub> = 0.88 mA). You could see this test circuit on the video at the end of this article.</p>
+<p><strong>B. Driving the Relay</strong></p>
+<p>Relay perhaps is one of the oldest electronic components that could be tracked back from the early years when we first use the electricity in our life. A relay basically is an electrical switch that uses the electromagnetic solenoid to control a switch contact. Because it use the solenoid (inductive load), therefore we need to use a diode to protect the transistor against the EMF. The main advantage of using a relay is that we could “relaying” or pass on the switch effect from a low power side on its solenoid to the high power side on its metal contact by using the electromagnetic effect, where both of the solenoid and contact has its own separate electrical specification.</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw31.jpg"><img class="alignnone size-full wp-image-2145" title="trsw31" src="./Using Transistor as a Switch _ ermicroblog_files/trsw31.jpg" alt="" width="582" height="292" srcset="http://www.ermicro.com/blog/wp-content/uploads/2011/09/trsw31.jpg 939w, http://www.ermicro.com/blog/wp-content/uploads/2011/09/trsw31-300x150.jpg 300w" sizes="(max-width: 582px) 100vw, 582px"></a></p>
+<p>Now using the same principal we could easily calculate the <strong>RC</strong> and <strong>RB</strong> value on this following circuit:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw05.jpg"><img class="alignnone size-full wp-image-428" title="trsw05" src="./Using Transistor as a Switch _ ermicroblog_files/trsw05.jpg" alt="" width="587" height="410"></a></p>
+<p>By using 5 Volt power supply and relay with 5 Volt and 60mA operating current:</p>
+<p>RC = 0 Ohm (not use, connect relay directly to V<sub>CC</sub>)<br>
+I<sub>B</sub> = I<sub>C</sub> / h<sub>FE</sub> = 0.06 A / 100 = 0.0006 A<br>
+RB = (V<sub>PORT</sub> – V<sub>BE</sub>) / I<sub>B</sub> = (4.2 – 0.7) / 0.0006 = 5833.33 Ohm, use <strong>5K6 Ohm</strong> resistor<br>
+P = (V<sub>PORT</sub> – V<sub>BE</sub>) x I<sub>B</sub> = (4.2 – 0.7) x 0.0006 = 0.0021 watt, use <strong>0.25 Watt</strong> resistor</p>
+<p><strong>C. Increasing the Collector Current</strong></p>
+<p>What if the load current is more than 1 A, let’s say you want to drive a DC motor? Perhaps you will think to use bigger transistor such as 2N3055 power transistor; unfortunately the big power transistor tends to have small <strong>h<sub>FE</sub></strong> mostly less then 20, so it’s mean we have to supply bigger base current. We know that most microcontrollers I/O port can only supply a current up to 20mA, therefore by using this type of transistor the maximum current that we could achieve in the collector terminal is about 400mA; which is far bellow our expectation. The solution for this situation is to use what known as <strong>Darlington pair</strong> circuit:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw06.jpg"><img class="alignnone size-full wp-image-430" title="trsw06" src="./Using Transistor as a Switch _ ermicroblog_files/trsw06.jpg" alt="" width="586" height="404"></a></p>
+<p>By using the Darlington pair circuit we could combine two transistors; one with high <strong>h</strong><sub><strong>FE2</strong> </sub> factor usually has a low collector current and the one with high collector current usually has a low <strong>h<sub>FE1</sub></strong>factor. This will give you a total <strong>h</strong><sub><strong>FE</strong> </sub>of <strong>h<sub>FE1 x </sub>h</strong><sub><strong>FE2</strong>. </sub>In the Darlington pair circuits the V<sub>BE</sub> will be twice the normal transistor saturated voltage which is about 1.4 Volt. One of the popular ready made Darlington pair transistors on the market are TIP120 (NPN type) and TIP125 (PNP type) which could handle the collector current up to 3 A (max 5 A), and has the hFE minimum of 1000.</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw32.jpg"><img class="alignnone wp-image-2272" title="trsw32" src="./Using Transistor as a Switch _ ermicroblog_files/trsw32.jpg" alt="" width="589" height="376" srcset="http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw32.jpg 789w, http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw32-300x191.jpg 300w" sizes="(max-width: 589px) 100vw, 589px"></a></p>
+<p>The TIP120 and TIP125 is called a pair Darlington transistors as they have similar characteristic but have an opposite type (i.e. NPN and PNP), this Darlington transistor pair is popular used in motor controller with the H-Bridge circuit. Remember when you use a power transistor to drive a large collector current, you need to supply the transistor with the adequate heat sink to help cooling the transistor by dissipating heat through the heat sink surface into the surrounding air.</p>
+<p>Using the same principal we’ve learned before, we could easily calculate the <strong>RB</strong> value of the DC motor circuit interface bellow:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw07.jpg"><img class="alignnone size-full wp-image-431" title="trsw07" src="./Using Transistor as a Switch _ ermicroblog_files/trsw07.jpg" alt="" width="584" height="401" srcset="http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw07.jpg 506w, http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw07-300x206.jpg 300w" sizes="(max-width: 584px) 100vw, 584px"></a></p>
+<p>By using 5 Volt power supply and DC Motor with 12 Volt and 1 A maximum operating current:</p>
+<p>RC = 0 Ohm (not use, connect directly to the 12 Volt power)<br>
+I<sub>B</sub> = I<sub>C</sub> / h<sub>FE</sub> = 1 A / 1000 = 0.001 A<br>
+RB = (V<sub>PORT</sub> – V<sub>BE</sub>) / I<sub>B</sub> = (4.2 – 1.4) / 0.001 = 2800 Ohm, use <strong>2K7 Ohm</strong> resistor<br>
+P = (V<sub>PORT</sub> – V<sub>BE</sub>) x I<sub>B</sub> = (4.2 – 1.4) x 0.001 = 0.0028 watt, use <strong>0.25 Watt</strong> resistor</p>
+<p><strong>D. The Darlington Transistor Array</strong></p>
+<p>For more compact version of the Darlington pair transistor you could use the Texas Instrument ULN2803A which is contain 8 Darlington pair transistors with has build in 2K7 base resistor and clamp diode for each Darlington pair transistors. This makes this Darlington transistor array suitable for driving the relay or motor up to 500mA (this is a maximum datasheet value) directly from the microcontroller output.</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw14.jpg"><img class="alignnone size-full wp-image-1285" title="trsw14" src="./Using Transistor as a Switch _ ermicroblog_files/trsw14.jpg" alt="" width="589" height="208" srcset="http://www.ermicro.com/blog/wp-content/uploads/2009/10/trsw14.jpg 912w, http://www.ermicro.com/blog/wp-content/uploads/2009/10/trsw14-300x106.jpg 300w" sizes="(max-width: 589px) 100vw, 589px"></a></p>
+<p>To increase the output current up to 1 A (2 x 500mA, remember this is a maximum datasheet value, for practical application use just half or 2 x 250 mA) you could simply use two Darlington transistor array connected in parallel, the following is the sample circuit for driving two DC motors using the ULN2803A Darlington transistor array:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw15.jpg"><img class="alignnone size-full wp-image-1286" title="trsw15" src="./Using Transistor as a Switch _ ermicroblog_files/trsw15.jpg" alt="" width="585" height="404" srcset="http://www.ermicro.com/blog/wp-content/uploads/2009/10/trsw15.jpg 755w, http://www.ermicro.com/blog/wp-content/uploads/2009/10/trsw15-300x207.jpg 300w" sizes="(max-width: 585px) 100vw, 585px"></a></p>
+<p>Thanks to the build in internal 2K7 base resistor and the two clamp diode, you don’t need any external component when using ULN2803A to drive the DC motor from your microcontroller port. The Darlington transistor array ULN2803A could be used to drive up to 50 volt voltage load.</p>
+<p><strong>E. Isolating your Circuit</strong></p>
+<p>Sometimes we need to isolate our microcontroller circuit from the interface circuit especially in the environment that generating a lot of noise which could disturb our microcontroller operation. When we use a relay from the above example, the driver ground is still directly connected to the microcontroller circuit, so there is a change the noises will interfere the microcontroller circuit.</p>
+<p>To completely isolate the circuit we could use the optocouplers (also called optoissolator) circuit, this circuit will completely isolate your microcontroller from the interface circuit:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw09.jpg"><img class="alignnone size-full wp-image-433" title="trsw09" src="./Using Transistor as a Switch _ ermicroblog_files/trsw09.jpg" alt="" width="596" height="249" srcset="http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw09.jpg 646w, http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw09-300x125.jpg 300w" sizes="(max-width: 596px) 100vw, 596px"></a></p>
+<p>The popular optocouplers circuit available on the market is 4N35 which has the h<sub>FE</sub> of 500 (in the optocouplers terminology this is also known as the transistor static forward current transfer ratio, Texas Instrument SOES021C, measured with infrared LED current = 0) and maximum collector current of 100mA.</p>
+<p>Differ from the ordinary transistor in the optocouplers we don’t use the transistor base terminal for driving the collector current; instead we use the internal infrared LED to transfer the infrared LED light intensity to the phototransitor; based on this infrared LED light intensity the phototransistor will be turned ON or OFF; giving more current to drive this infrared LED will effect more current to flow on the phototransistor collector; This effect is known as the current transfer ratio (CTR). The 100% CTR means that all the current flow on the infrared LED will be transferred 100% to the phototransistor collector.</p>
+<p>Therefore by driving the internal infrared LED with 15 mA (in the optocouplers terminology this is also known as the input diode static forward current),&nbsp; we could assure that the phototransistor will be in the saturate state (ON), because the minimum current to make the phototransitor on is about 10 mA. The following circuit is use optocoupler to interfacing the relay:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw11.jpg"><img class="alignnone size-full wp-image-434" title="trsw11" src="./Using Transistor as a Switch _ ermicroblog_files/trsw11.jpg" alt="" width="586" height="353"></a></p>
+<p>By using 5 Volt power supply and relay with 5 Volt and 60mA operating current:</p>
+<p>RC = 0 Ohm (not use, connect relay directly to 5 Volt)<br>
+I<sub>diode</sub> = 15 mA (0.015 A), V<sub>LED</sub> = 2 Volt<br>
+RB = (V<sub>PORT</sub> – V<sub>LED</sub>) / I<sub>B</sub> = (4.2 – 2) / 0.015 = 146.66 Ohm, use <strong>150 Ohm</strong> resistor<br>
+P = (V<sub>PORT</sub> – V<sub>LED</sub>) x I<sub>B</sub> = (4.2 – 2) x 0.015 = 0.033 watt, use <strong>0.25 Watt</strong> resistor</p>
+<p>If you need to drive more current you could use the Darlington pair circuit above or you could use the high gain Darlington optocopuler such as 4N45 (CTR minimum about 350 %).</p>
+<p><strong>F. Controlling your DC motor direction</strong></p>
+<p>Using just one transistor to control the DC motor as the above example; we only can turn the DC motor in one direction if we want to change the direction than we also have to change the DC motor voltage polarity. The other way to work around this condition is to use the relay to switch the DC motor’s voltage polarity, but using this method means the DC motor will always ON and we can not control the DC motor speed using digital signal or known as the PWM (Pulse Width Modulation).</p>
+<p>The best and popular way to solve this issue is to use the H-bridge circuit:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw12.jpg"><img class="alignnone size-full wp-image-435" title="trsw12" src="./Using Transistor as a Switch _ ermicroblog_files/trsw12.jpg" alt="" width="589" height="359" srcset="http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw12.jpg 684w, http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw12-300x183.jpg 300w" sizes="(max-width: 589px) 100vw, 589px"></a></p>
+<p>When we apply current (I<sub>B1)</sub> to the TR1 and TR2 transistors, I<sub>B2</sub>=0 to the TR3 and TR4 transistors, then TR1 and TR4 transistors will be turned ON, TR2 and TR3 will be turned OFF; this will cause the current to start flow through TR1 transistor, passing the DC motor and going into the TR4 transistor (blue color). When we apply current (I<sub>B2)</sub> to the TR3 and TR4 transistors, I<sub>B1</sub>=0 to the TR1 and TR2 transistors, then the TR3 and TR2 transistors will be ON while TR1 and TR4 transistors will be turned OFF; this will cause the current to flow through TR3, passing the DC motor in reverse polarity and going into the TR2 transistor (red color). By not applying current to both I<sub>B1</sub> and I<sub>B2</sub> all the transistors will be turned OFF.</p>
+<p>Again by applying the Ohm’s law we could easily calculate the <strong>RB1</strong> and <strong>RB2</strong> on this following circuit (Updated! Thanks for the nice discussion and correction from the All About Circuits Forum discussion <a title="All About Circuit Forum" href="http://forum.allaboutcircuits.com/showthread.php?t=39516&amp;page=2" target="_blank">here</a>, in order for this circuit to work you have to put a resistor on each of the TIP 120 Darlington transistors base terminal):</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw13.jpg"><img class="alignnone size-full wp-image-436" title="trsw13" src="./Using Transistor as a Switch _ ermicroblog_files/trsw13.jpg" alt="" width="589" height="348" srcset="http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw13.jpg 606w, http://www.ermicro.com/blog/wp-content/uploads/2008/12/trsw13-300x177.jpg 300w" sizes="(max-width: 589px) 100vw, 589px"></a></p>
+<p>The above H-Bridge circuit use 5 Volt supply and DC motor with 5 Volt and 1 A maximum operating current rating; assuming the TIP120 Darlington transistor h<sub>FE</sub> is 1000, the <strong>RB1</strong> and <strong>RB2</strong> resistors could be calculated as follow:</p>
+<p>I<sub>B</sub> = I<sub>C</sub> / h<sub>FE</sub> = 1 A / 1000 = 0.001 A, for each of the transistor base current<br>
+RB1a,b = (V<sub>PORT</sub> – V<sub>BE</sub>) / I<sub>B</sub> = (4.2 – 1.4) / 0.001 = 2800 Ohm, use <strong>2K2 Ohm</strong> resistor<br>
+RB2a,b = (V<sub>PORT</sub> – V<sub>BE</sub>) / I<sub>B</sub> = (4.2 – 1.4) / 0.001 = 2800 Ohm, use <strong>2K2 Ohm</strong> resistor<br>
+P = (V<sub>PORT</sub> – V<sub>BE</sub>) x I<sub>B</sub> = (4.2 – 1.4) x 0.001 = 0.0028 watt, use <strong>0.25 Watt</strong> resistor for <strong>RB1</strong> and <strong>RB2</strong></p>
+<p>To test the TIP 120 Darlington transistors H-Bridge circuit above I used this following circuit using Atmel AVR ATTiny13 microcontroller as shown on this following picture:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw23.jpg"><img class="alignnone size-full wp-image-1705" title="trsw23" src="./Using Transistor as a Switch _ ermicroblog_files/trsw23.jpg" alt="" width="577" height="405" srcset="http://www.ermicro.com/blog/wp-content/uploads/2010/06/trsw23.jpg 810w, http://www.ermicro.com/blog/wp-content/uploads/2010/06/trsw23-300x211.jpg 300w" sizes="(max-width: 577px) 100vw, 577px"></a></p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw22.jpg"><img class="alignnone size-full wp-image-1706" title="trsw22" src="./Using Transistor as a Switch _ ermicroblog_files/trsw22.jpg" alt="" width="573" height="448" srcset="http://www.ermicro.com/blog/wp-content/uploads/2010/06/trsw22.jpg 804w, http://www.ermicro.com/blog/wp-content/uploads/2010/06/trsw22-300x234.jpg 300w" sizes="(max-width: 573px) 100vw, 573px"></a></p>
+<p>Bellow is the C Program that I used to test this circuit:</p>
+<pre>//***************************************************************************
+//  File Name	 : trhbridge.c
+//  Version      : 1.0
+//  Description. : Transistor as Switch: Simple All TIP120 H-Bridge
+//  Author  	 : RWB
+//  Target  	 : Atmel AVR ATTiny13 Microcontroller
+//  Compiler     : AVR-GCC 4.3.2; avr-libc 1.6.2 (WinAVR 20090313)
+//  IDE          : Atmel AVR Studio 4.17
+//  Programmer   : Atmel AVRISPmkII
+//  Last Updated : 18 June 2010
+//***************************************************************************
+#include &lt;avr/io.h&gt;
+#include &lt;util/delay.h&gt;</pre>
+<pre>int main(void)
+{
+   // Initial I/O
+   DDRB |= (1&lt;&lt;PB3)|(1&lt;&lt;PB4); // Set PB3,PB4 as Output, Others as Input
+   PORTB &amp;= ~(1&lt;&lt;PB3);        // Reset PB3 (OFF)
+   PORTB &amp;= ~(1&lt;&lt;PB3);        // Reset PB4 (OFF)
+
+   for(;;) {                  // Loop Forever
+     PORTB |= (1&lt;&lt;PB3);       // Turn ON PB3
+     _delay_ms(3000);         // Delay 3 Second
+     PORTB &amp;= ~(1&lt;&lt;PB3);      // Turn OFF PB3
+     _delay_ms(2000);         // Delay 2 Second
+     PORTB |= (1&lt;&lt;PB4);       // Turn ON PB4
+     _delay_ms(3000);         // Delay 3 Second
+     PORTB &amp;= ~(1&lt;&lt;PB4);      // Turn OFF PB4
+     _delay_ms(2000);         // Delay 2 Second
+   }
+   return 0;	              // Standard Return Code
+}</pre>
+<pre>/* EOF: trhbridge.c */</pre>
+<p>One of the advantage using all NPN transistors in the H bridge circuit is the NPN transistor tends to have faster turn on time comparing to the PNP transistor, beside by using the same transistor type we could have similar transistor characteristic in the circuit. You could read more example of using all NPN transistor H-Bridge in “<a title="H-Bridge Microchip PIC Microcontroller PWM Motor Controller" href="http://www.ermicro.com/blog/?p=706" target="_blank">H-Bridge Microchip PIC Microcontroller PWM Motor Controller</a>” on this blog.</p>
+<p>Actually most of the modern H-Bridge circuit design for higher voltage (e.g. more than 9 volt) is rarely use the BJT anymore; instead we use the MOSFET because MOSFET is more efficient on higher voltage (i.e. less power dissipation) compare to the ordinary BJT. The other advantage of using MOSFET is that it has very high input impedance, therefore we could easily connect parallel a couple of the same MOSFET to achieve the higher current output and at the same time we could decrease the output resistance of the MOSFET (Rds), which mean we could get more lower power dissipation as shown on this following picture:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw30.jpg"><img class="alignnone size-full wp-image-2143" title="trsw30" src="./Using Transistor as a Switch _ ermicroblog_files/trsw30.jpg" alt="" width="581" height="373" srcset="http://www.ermicro.com/blog/wp-content/uploads/2011/09/trsw30.jpg 890w, http://www.ermicro.com/blog/wp-content/uploads/2011/09/trsw30-300x193.jpg 300w" sizes="(max-width: 581px) 100vw, 581px"></a></p>
+<p>The “<a title="The Line Follower Robot with Texas Instruments 16-Bit MSP430G2231 Microcontroller" href="http://www.ermicro.com/blog/?p=2104" target="_blank">The Line Follower Robot with Texas Instruments 16-Bit MSP430G2231 Microcontroller</a>” article is a good example of how we use the N-Channel MOSFET to control the DC motor.</p>
+<p><strong>Driving the Stepper Motor</strong></p>
+<p>One type of the brushless electric motor that is designed specifically for digital signal input is called the stepper motor. The stepper motor usually is used when we need to control the precise rotation movement and speed with the open loop control. These advantages make the stepper motor is widely found in many applications such as printers, scanners, disk drives, automotives, CNC machines, toys, and many more.</p>
+<p>Today the most common used stepper motor types are Unipolar Stepper Motor and Bipolar Stepper Motor. The unipolar stepper motor usually has two windings with a center tap on each of windings, therefore the current could move from the center tap either to the left winding or to the right winding. Usually the unipolar stepper motor comes with 5 or 6 terminal leads. On the other hands the bipolar stepper motor actually is similar to the unipolar type but without the center tap.</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw25a.jpg"><img class="alignnone size-full wp-image-1891" title="trsw25a" src="./Using Transistor as a Switch _ ermicroblog_files/trsw25a.jpg" alt="" width="588" height="239" srcset="http://www.ermicro.com/blog/wp-content/uploads/2010/11/trsw25a.jpg 749w, http://www.ermicro.com/blog/wp-content/uploads/2010/11/trsw25a-300x122.jpg 300w" sizes="(max-width: 588px) 100vw, 588px"></a></p>
+<p>Therefore the unipolar stepper motor has advantage of more simple driving circuit over the bipolar stepper motor but has a torque less than the bipolar motor for the same size. The following circuit uses four BC639 transistors to drive the unipollar stepper using the Atmel AVR ATTiny13 microcontroller to provide the required stepping signal to the unipolar stepper motor:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw25.jpg"><img class="alignnone size-full wp-image-1892" title="trsw25" src="./Using Transistor as a Switch _ ermicroblog_files/trsw25.jpg" alt="" width="581" height="434" srcset="http://www.ermicro.com/blog/wp-content/uploads/2010/11/trsw25.jpg 829w, http://www.ermicro.com/blog/wp-content/uploads/2010/11/trsw25-300x224.jpg 300w" sizes="(max-width: 581px) 100vw, 581px"></a></p>
+<p>From the schematic above you could see that each transistor is connected to half windings of the unipolar stepper motor phase. You need to experiment with your own stepper motor to get the right windings connection. Assuming maximum 100 mA unipolar stepper motor current on 5 volt supply, and using minimum BC 639 transistor hFE of 40, we could calculate the RB (the base resistors) as follow:</p>
+<p>IB = IC / hFE = 100 mA / 40 = 0.0025 A<br>
+RB = (VPORT – VBE) / IB = (4.2 – 0.7) / 0.0025 = 1400 Ohm, use <strong>1K5 Ohm</strong> resistor<br>
+P = (VPORT – VBE) x IB = (4.2 – 0.7) x 0.0025 = 0.0086 watt, use <strong>0.25 watt</strong> resistor</p>
+<p>Two clamp diodes on each transistor are required because the winding has a center tap. Therefore when one end of winding is high (Vcc) the other end is low (GND) the lower diode will bypass the back EMF (Electromotive Force) voltage that appear on BC 639 transistor collector and emitter terminals.</p>
+<p>This following is the C code is used for testing the circuit above:</p>
+<pre>//***************************************************************************
+//  File Name	  : upstepper.c
+//  Version       : 1.0
+//  Description.  : Transistor as Switch: Simple Unipolar Stepper
+//                  Motor Driver - Full Step Method
+//  Author  	  : RWB
+//  Target  	  : ATTiny13
+//  Compiler      : AVR-GCC 4.3.2; avr-libc 1.6.2 (WinAVR 20090313)
+//  IDE           : Atmel AVR Studio 4.17
+//  Programmer    : Atmel AVRISPmkII
+//  Last Updated  : 03 Nov 2010
+//***************************************************************************</pre>
+<pre>#include &lt;avr/io.h&gt;
+#include &lt;util/delay.h&gt;
+#include &lt;avr/interrupt.h&gt;</pre>
+<pre>// Unipolar Stepper Motor CW/CCW Stepping Sequence
+#define MAX_STEP 4</pre>
+<pre>unsigned char cwstep_seq[MAX_STEP]= {0b00000110,
+                                     0b00000011,
+				     0b00001001,
+				     0b00001100};</pre>
+<pre>unsigned char ccwstep_seq[MAX_STEP]= {0b00001100,
+                                      0b00001001,
+				      0b00000011,
+				      0b00000110};
+volatile unsigned char step_index;
+volatile unsigned int ovftimes;
+volatile unsigned char status;</pre>
+<pre>ISR(TIM0_OVF_vect)
+{
+  static unsigned int count=1;</pre>
+<pre>  count++;
+  if (count &gt;= ovftimes) {
+    cli();                      // Disable Interrupt</pre>
+<pre>    // Stepping Output
+    if (status)
+      PORTB = ccwstep_seq[step_index++];
+    else
+      PORTB = cwstep_seq[step_index++];</pre>
+<pre>    if (step_index &gt;= MAX_STEP)
+      step_index=0;</pre>
+<pre>    count=0;                    // Reset Count
+    TCNT0=0;                    // Start counter from 0
+    sei();                      // Enable Interrupt
+  }
+}</pre>
+<pre>int main(void)
+{
+   // Initial I/O
+   DDRB = 0b00001111;        // Set PB0, PB1, PB2, and PB3 as Output, Others as Input
+   PORTB = 0b00000000;       // Reset PORTB Output</pre>
+<pre>   // Set ADCSRA Register on ATTiny13
+   ADCSRA = (1&lt;&lt;ADEN) | (1&lt;&lt;ADPS2) | (1&lt;&lt;ADPS1);
+   ADCSRB = 0b00000000;</pre>
+<pre>   // Set ADMUX to PB4 (ADC2)
+   ADMUX=0b00000010;</pre>
+<pre>   // Disable Digital Input on PB4 (ADC2)
+   DIDR0=0b00001000;</pre>
+<pre>   // Initial TIMER0
+   TCCR0A=0b00000000;        // Timer/Counter 0 Normal Operation
+   TCCR0B=(1&lt;&lt;CS01);         // Use prescaller: Clk/8 with 9.6 MHz Internal Clock
+   TCNT0=0;                  // Start counter from 0
+   TIMSK0=(1&lt;&lt;TOIE0);        // Enable Counter Overflow Interrupt</pre>
+<pre>   step_index=0;
+   ovftimes=10;
+   status=0;                 // 0 - CW, 1 - CCW</pre>
+<pre>   sei();                    // Enable Interrupt
+
+   for(;;) {                 // Loop Forever
+     // Start conversion by setting ADSC on ADCSRA Register
+     ADCSRA |= (1&lt;&lt;ADSC);</pre>
+<pre>     // wait until convertion complete ADSC=0 -&gt; Complete
+     while (ADCSRA &amp; (1&lt;&lt;ADSC));</pre>
+<pre>     // Get the ADC Result
+     ovftimes = ADCW;</pre>
+<pre>     if (ovftimes &gt; 800)
+       status^=0x01;        // Toggle the Direction
+
+     _delay_ms(50);
+   }
+   return 0;	            // Standard Return Code
+}</pre>
+<pre>/* EOF: upstepper.c */</pre>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw26.jpg"><img class="alignnone size-full wp-image-1893" title="trsw26" src="./Using Transistor as a Switch _ ermicroblog_files/trsw26.jpg" alt="" width="579" height="435" srcset="http://www.ermicro.com/blog/wp-content/uploads/2010/11/trsw26.jpg 792w, http://www.ermicro.com/blog/wp-content/uploads/2010/11/trsw26-300x225.jpg 300w" sizes="(max-width: 579px) 100vw, 579px"></a></p>
+<p>The method to rotate this unipolar stepper motor rotor is known as the <strong>full step mode method</strong>; in full step mode we always excite two windings at the same time, with the right current sequence we could rotate the stepper motor in 4 repeatable steps. Reversing the step sequences will make the stepper motor to turn into opposite direction. In this tutorial I used NMB-PM20S-020 permanent magnet motor where the step required is shown on this following diagram:</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw27.jpg"><img class="alignnone size-full wp-image-1894" title="trsw27" src="./Using Transistor as a Switch _ ermicroblog_files/trsw27.jpg" alt="" width="577" height="280" srcset="http://www.ermicro.com/blog/wp-content/uploads/2010/11/trsw27.jpg 917w, http://www.ermicro.com/blog/wp-content/uploads/2010/11/trsw27-300x145.jpg 300w" sizes="(max-width: 577px) 100vw, 577px"></a></p>
+<p>You could easily adapt the step sequence to your own unipolar stepper motor by changing both the <strong>cwstep_seq</strong> (clockwise rotation) and <strong>ccwstep_seq</strong> (counter clockwise rotation) array variables data in the program.</p>
+<p>Using the AVR ATTiny13 microcontroller TIMER0 interrupt we could easily supply the required output steps to the stepper motor. I used the ADC (Analog to Digital Conversion) to control the stepper motor step sequence delay as well as to change the rotation direction by adjusting the 10K trimport. For more information about AVR ADC and TIMER0 you could read these blog’s articles “<a title="Analog to Digital Converter AVR C Programming" href="http://www.ermicro.com/blog/?p=121" target="_blank">Analog to Digital Converter AVR C Programming</a>” and “<a title="Working with AVR microcontroller Communication Port Project" href="http://www.ermicro.com/blog/?p=325" target="_blank">Working with AVR microcontroller Communication Port Project</a>“.</p>
+<p>You could also replace the BC639 transistor with the Darlington pair transistor array such as ULN2803A from Texas Instrument mention above. Using this Darlington pair transistor array make the unipolar stepper circuit become simpler (less components) because it has the required clamp diode on each Darlington transistor pair and you could take advantage of higher current gainer provided by the Darlington pair transistors.</p>
+<p>To drive the bipolar stepper motor; each of the two windings will require the H-Bridge circuit similar to the H-Bridge circuit for driving the DC motor mention above. Therefore we need at least 8 transistors to drive the bipolar stepper motor (4 transistors on each windings). By forwarding and reversing the current flow on each winding we could achieve the required steps sequence to drive the bipolar motor.</p>
+<p><a href="./Using Transistor as a Switch _ ermicroblog_files/trsw28.jpg"><img class="alignnone size-full wp-image-1895" title="trsw28" src="./Using Transistor as a Switch _ ermicroblog_files/trsw28.jpg" alt="" width="578" height="373" srcset="http://www.ermicro.com/blog/wp-content/uploads/2010/11/trsw28.jpg 781w, http://www.ermicro.com/blog/wp-content/uploads/2010/11/trsw28-300x193.jpg 300w" sizes="(max-width: 578px) 100vw, 578px"></a></p>
+<p>And by supplying the correct steps sequence logic to <strong>IN1, IN2, IN3, IN4, IN5, IN6, IN7</strong>, and <strong>IN8</strong> input from the microcontroller output port we could make this bipolar stepper motor to rotate. The opposite direction (counter clockwise) rotation could be achieved by reversing the steps sequence (i.e. 4, 3, 2, and 1).</p>
+<p><strong>Using Transistor as switch Testing </strong><strong>Circuit </strong><strong>Video</strong></p>
+<p>1. This following video show you of how to drive a transistor which connected with 5 red LED using the Atmel AVR ATTiny25 microcontroller.</p>
+<p><object width="480" height="385" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><param name="src" value="http://www.youtube.com/v/3KLwCbpm90A&amp;hl=en_US&amp;fs=1&amp;"><param name="allowfullscreen" value="true"><embed width="480" height="385" type="application/x-shockwave-flash" src="http://www.youtube.com/v/3KLwCbpm90A&amp;hl=en_US&amp;fs=1&amp;" allowfullscreen="true" allowscriptaccess="always"></object></p>
+<p>2. The TIP120 H-Bridge Testing Circuit video using Atmel ATTiny13 Microcontroller:</p>
+<p><object width="479" height="388" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><param name="src" value="http://www.youtube.com/v/U6dQK3C3dus&amp;hl=en&amp;fs=1"><param name="allowfullscreen" value="true"><embed width="479" height="388" type="application/x-shockwave-flash" src="http://www.youtube.com/v/U6dQK3C3dus&amp;hl=en&amp;fs=1" allowfullscreen="true" allowscriptaccess="always"></object></p>
+<p>3. The Unipolar Stepper Motor Testing Circuit video using Atmel ATTiny13 Microcontroller:</p>
+<p><object width="479" height="388" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><param name="src" value="http://www.youtube.com/v/9NArjQNOFpE?hl=en&amp;fs=1"><param name="allowfullscreen" value="true"><embed width="479" height="388" type="application/x-shockwave-flash" src="http://www.youtube.com/v/9NArjQNOFpE?hl=en&amp;fs=1" allowfullscreen="true" allowscriptaccess="always"></object></p>
+<p class="bookmark-me"></p><h3>Bookmarks and Share</h3><br><a title="technorati.com" href="http://www.technorati.com/faves?add=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423" target="_blank" rel="nofollow"><img src="./Using Transistor as a Switch _ ermicroblog_files/technorati.png" style="margin:0;border:0;padding:0" alt="bookmark"></a> <a title="del.icio.us" href="http://del.icio.us/post?url=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423&amp;title=Using+Transistor+as+a+Switch" target="_blank" rel="nofollow"><img src="./Using Transistor as a Switch _ ermicroblog_files/delicious.png" style="margin:0;border:0;padding:0" alt="bookmark"></a> <a title="stumbleupon.com" href="http://www.stumbleupon.com/submit?url=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423&amp;title=Using+Transistor+as+a+Switch" target="_blank" rel="nofollow"><img src="./Using Transistor as a Switch _ ermicroblog_files/stumbleupon.png" style="margin:0;border:0;padding:0" alt="bookmark"></a> <a title="digg.com" href="http://digg.com/submit?url=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423&amp;title=Using+Transistor+as+a+Switch" target="_blank" rel="nofollow"><img src="./Using Transistor as a Switch _ ermicroblog_files/digg.png" style="margin:0;border:0;padding:0" alt="bookmark"></a> <a title="www.facebook.com" href="http://www.facebook.com/share.php?u=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423&amp;t=Using+Transistor+as+a+Switch" target="_blank" rel="nofollow"><img src="./Using Transistor as a Switch _ ermicroblog_files/facebook.png" style="margin:0;border:0;padding:0" alt="bookmark"></a> <a title="bookmarks.yahoo.com" href="http://bookmarks.yahoo.com/toolbar/savebm?opener=tb&amp;u=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423" target="_blank" rel="nofollow"><img src="./Using Transistor as a Switch _ ermicroblog_files/yahoo.png" style="margin:0;border:0;padding:0" alt="bookmark"></a> <a title="www.google.com" href="http://www.google.com/bookmarks/mark?op=edit&amp;output=popup&amp;bkmk=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423&amp;title=Using+Transistor+as+a+Switch" target="_blank" rel="nofollow"><img src="./Using Transistor as a Switch _ ermicroblog_files/google.png" style="margin:0;border:0;padding:0" alt="bookmark"></a> <a title="furl.com" href="http://www.furl.net/storeIt.jsp?u=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423&amp;t=Using+Transistor+as+a+Switch" target="_blank" rel="nofollow"><img src="./Using Transistor as a Switch _ ermicroblog_files/furl.png" style="margin:0;border:0;padding:0" alt="bookmark"></a> <a title="reddit.com" href="http://reddit.com/submit?url=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423&amp;title=Using+Transistor+as+a+Switch" target="_blank" rel="nofollow"><img src="./Using Transistor as a Switch _ ermicroblog_files/reddit.png" style="margin:0;border:0;padding:0" alt="bookmark"></a> <a title="windowslive.com" href="https://favorites.live.com/quickadd.aspx?mkt=en-us&amp;url=http%3A%2F%2Fwww.ermicro.com%2Fblog%2F%3Fp%3D423" target="_blank" rel="nofollow"><img src="./Using Transistor as a Switch _ ermicroblog_files/windowslive.png" style="margin:0;border:0;padding:0" alt="bookmark"></a> <br><br><br><p></p>
+<div class="wp_rp_wrap  wp_rp_plain" id="wp_rp_first"><div class="wp_rp_content"><h3 class="related_post_title">Related Posts</h3><ul class="related_post wp_rp" style="visibility: visible"><li><a href="http://www.ermicro.com/blog/?p=706" class="wp_rp_title">H-Bridge Microchip PIC Microcontroller PWM Motor Controller</a></li><li><a href="http://www.ermicro.com/blog/?p=1578" class="wp_rp_title">Working with the Comparator Circuit</a></li><li><a href="http://www.ermicro.com/blog/?p=1163" class="wp_rp_title">Build Your Own Microcontroller Based PID Control Line Follower Robot (LFR) – Second Part </a></li><li><a href="http://www.ermicro.com/blog/?p=1097" class="wp_rp_title">Build Your Own Transistor Based Mobile Line Follower Robot (LFR)  –  First Part</a></li><li><a href="http://www.ermicro.com/blog/?p=1088" class="wp_rp_title">Simple and Easy Light Emitting Diode (LED) Tester</a></li></ul></div></div>
+
+<!-- Start Google Adsense  -->
+<br><br>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-9787882570656893";
+/* 468x60, created 3/12/09 */
+google_ad_slot = "9374687509";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript" src="./Using Transistor as a Switch _ ermicroblog_files/f.txt">
+</script>
+
+<!-- End Google Adsense -->
+
+<div id="more_entries">
+<div class="oe"></div><div class="re"></div>
+</div>
+
+
+<!-- You can start editing here. -->
+
+
+<h3 class="comm" id="comments">28 Responses to “Using Transistor as a Switch”</h3>
+
+
+	
+
+<div class="comment " id="comment-76">
+<div class="comment_date_and_id"><span class="comm_date">02.09.09</span><span class="comm_id">#1</span></div>
+<p class="comment_by">Comment by <b>slowjoe</b>.</p>
+<p>I’ve had a go at making the final H-bridge circuit shown here using TIP120 darlington pairs and had a bit of trouble. If I split the connections from the microcontroller after the resistors RB1 and RB2 (as shown in the circuit diagram) then it doesn’t seem to work, however if I split the signal before the resistors and use 2 resistors for each of RB1 and RB2 then it does work. I’m not sure I understand why yet maybe somebody can explain.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-77">
+<div class="comment_date_and_id"><span class="comm_date">02.09.09</span><span class="comm_id">#2</span></div>
+<p class="comment_by">Comment by <b><a href="http://rwb/" rel="external nofollow" class="url">rwb</a></b>.</p>
+<p>The original TIP120 H-Bridge schematic has been changed; now I used resistor on each of the TIP120 base terminal as you did. Thank you</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-156">
+<div class="comment_date_and_id"><span class="comm_date">23.01.10</span><span class="comm_id">#3</span></div>
+<p class="comment_by">Comment by <b>mandomoose</b>.</p>
+<p>Thankyou for this great post. I was wondering about using the transistor as a switch with  my avr. </p>
+<p>Keep having fun 🙂</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-339">
+<div class="comment_date_and_id"><span class="comm_date">20.07.10</span><span class="comm_id">#4</span></div>
+<p class="comment_by">Comment by <b>kansairobot</b>.</p>
+<p>Thanks for the great blog 🙂</p>
+<p>I am sorry if this sounds like a total newbie question but in your pics (in which you dont use a optocoupler) you connect both the 12V circuit and the micro ground to a common ground. </p>
+<p>My question is how to implement the 12V and 5V part? I mean let’s say I am using common batteries (8 batteries= 12V) I connect the motor to the 12V part but where do I connect the 5V pin of the micro to??</p>
+<p>I dont know if my question make sense sorry<br>
+Kansai</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-340">
+<div class="comment_date_and_id"><span class="comm_date">20.07.10</span><span class="comm_id">#5</span></div>
+<p class="comment_by">Comment by <b><a href="http://rwb/" rel="external nofollow" class="url">rwb</a></b>.</p>
+<p>You should have two separate DC power sources (e.g. 3 AA batteries for 4.5 volt and 8 AA batteries for 12 volt); the first one is the 5 volt or 4.5 volt which is used to power the microcontroller circuit and the second one is the 12 volt which is used to power the Darlington transistor and the DC motor. In order to make the darlington transistor work (ON) we have to provide adequate voltage between the base and the emitter terminal; this voltage is provided by the microcontroller I/O port (powered by 5 Volt source), that is why we have to connect these two voltage sources on the same common ground.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-342">
+<div class="comment_date_and_id"><span class="comm_date">21.07.10</span><span class="comm_id">#6</span></div>
+<p class="comment_by">Comment by <b>kansairobot</b>.</p>
+<p>thank you very much for your reply.</p>
+<p>For the H-bridge part i was thinking of using 2N2222’s (since my motor only needs around 280mA).</p>
+<p>or use Toshiba TA7291S bridge circuit.</p>
+<p>These circuits are made of transistors it seems but how can you see if they generate enough current C-E (as we did for transistors in this tutorial)? I cant seem to understand their datasheet.</p>
+<p>Sorry for all the questions but I am learning a lot with your tutorials. Thanks always for these resources…</p>
+<p>kansai</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-343">
+<div class="comment_date_and_id"><span class="comm_date">21.07.10</span><span class="comm_id">#7</span></div>
+<p class="comment_by">Comment by <b><a href="http://rwb/" rel="external nofollow" class="url">rwb</a></b>.</p>
+<p>When you choose the transistor (e.g. 2N2222A); from datasheet Ic max = 800 mA, remember this is the maximum value, usually in real application we only use just half of its maximum capacity which is 400 mA. When you measure the DC motor make sure you also take into the consideration the DC motor stall current (i.e. motor on heavy load, where its almost stop) not reach the 400mA limit; unless you only use the DC motor as a free running DC motor (without or have a very small load).</p>
+<p>When using the Toshiba TA7291S bridge all you need is to supply the correct standard logic voltage to the IN1 and IN2 input pins; the integrated circuit inside TA7291S will make sure you get the saturate transistors condition on its output (average 0.9 volt). The input current on the IN1 and IN2 pins is very low (about 3 to 10 uA with Vin = 3.5 volt).</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-385">
+<div class="comment_date_and_id"><span class="comm_date">21.09.10</span><span class="comm_id">#8</span></div>
+<p class="comment_by">Comment by <b>ajoyz124</b>.</p>
+<p>Very illustrative, basic and simple facts required to work with micro controls.<br>
+Thanks.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-691">
+<div class="comment_date_and_id"><span class="comm_date">08.05.11</span><span class="comm_id">#9</span></div>
+<p class="comment_by">Comment by <b>topx666</b>.</p>
+<p>Lhank you Mr. Besinga for creating this tutorial. please let me introduce my self. my name Taufiq Sunar. I am a student of Electronics and Instrumentation in Gadjah Mada University, Indonesia. Currently I’m trying to make a switch using MOSFET with input from the AVR microcontroller PWM. I’m planning to use MOSFET series IRF740, IRF9530, IRF9540, or IRFZ44. Whether working principle and the calculation of MOSFET is similar to BJT transistor? Thank you very much for your answer!</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-698">
+<div class="comment_date_and_id"><span class="comm_date">08.05.11</span><span class="comm_id">#10</span></div>
+<p class="comment_by">Comment by <b><a href="http://rwb/" rel="external nofollow" class="url">rwb</a></b>.</p>
+<p>Nice to know you Taufiq. Bipolar Junction Transistor (BJT) is different compared to Metal Oxide Semiconductor Field Effect Transistor (MOSFET), therefore all the calculation for BJT could not be applied to MOSFET.</p>
+<p>BJT will amplify the input current (I<sub>B</sub>) by the current gain factor (h<sub>FE</sub>) on it’s output (I<sub>C</sub>) as follow:</p>
+<p><strong>h<sub>FE</sub> = I<sub>C</sub> / I<sub>B</sub></strong></p>
+<p>On the other hand MOSFET will amplify the input voltage (V<sub>GS</sub>) by the transconductance gain factor (g<sub>fs</sub>) on it’s output (I<sub>DS</sub>) as follow:</p>
+<p><strong>g<sub>fs</sub> = (change in I<sub>DS</sub> / change in V<sub>GS</sub>)</strong></p>
+<p>Where V<sub>DS</sub>: gate to source voltage and I<sub>DS</sub>: drain to source current. </p>
+<p>As you notice there is no I<sub>G</sub> (gate current) on the MOSFET gain factor formula; because of the issulation oxide on the MOSFET gate terminal design, therefore there is no current flow on the MOSFET Gate terminal (MOSFET is also known as a very high input impedance transistor).</p>
+<p>The I<sub>DS</sub> (drain to source current) will start to increase when the V<sub>GS</sub> voltage is above the V<sub>GS</sub> threshold voltage. Any small V<sub>GS</sub> voltage change applied to the MOSFET Gate input terminal will be amplified by the factor of g<sub>fs</sub> and reflected as a Drain current on the MOSFET Drain terminal side.</p>
+<p>Therefore by supplying V<sub>GS</sub> much greater than V<sub>GS</sub> threshold voltage, we could easily push the MOSFET into its saturate region. This make using the MOSFET is more simple compared to BJT as all you need is to connect the MOSFET gate terminal directly to the AVR microcontroller output port.</p>
+<p>The AVR microcontroller output port voltage (high logic) could easily drive the MOSFET into its saturate region, but make sure you always read the MOSFET datasheet especially the V<sub>DS</sub>, I<sub>DS</sub>, g<sub>fs</sub>, and V<sub>GS</sub> threshold when using different type of MOSFET.</p>
+<p>I hope this answer will clarify the differences between BJT and MOSFET </p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-715">
+<div class="comment_date_and_id"><span class="comm_date">10.05.11</span><span class="comm_id">#11</span></div>
+<p class="comment_by">Comment by <b>topx666</b>.</p>
+<p>Thank you very much for the explanation Mr. Besinga. Actually, I want to make a high-speed switch from AVR microcontroller PWM. PWM output is squarewave. Whether after connected into the MOSFET, its output also a squarewave? Because I’ve tried using a IRF740 MOSFET, and 8-bit fast pwm. But the results was not squarewave and its currents and voltages are very small. The PWM input was connected by 4k7 resistor to its gate. And its source supplied by 12V with 10k resistor.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-716">
+<div class="comment_date_and_id"><span class="comm_date">10.05.11</span><span class="comm_id">#12</span></div>
+<p class="comment_by">Comment by <b><a href="http://rwb/" rel="external nofollow" class="url">rwb</a></b>.</p>
+<p>Yes the output should be a square wave when the input is a square wave. You could read more about AVR Fast PWM on “<a href="http://www.ermicro.com/blog/?p=1971" rel="nofollow">Working with Atmel AVR Microcontroller Basic Pulse Width Modulation (PWM) Peripheral</a>” article.</p>
+<p>Actually you don’t need to use 4K7 resistor (current limiter) in series with the MOSFET Gate terminal, because there is no “Gate Current”, therefore you don’t have to “reduce” the current as it in BJT. If you want to use resistor use the voltage divider circuit (2 resistors) instead of one resistor. As long as the V<sub>GS</sub> &gt; V<sub>GS</sub> threshold and V<sub>GS</sub> &gt; V<sub>DS</sub>, the MOSFET will turn ON.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-831">
+<div class="comment_date_and_id"><span class="comm_date">28.06.11</span><span class="comm_id">#13</span></div>
+<p class="comment_by">Comment by <b>drogge</b>.</p>
+<p>I’ve been trying to make a H-Bridge circuit using 4 TIP120’s as per the above diagram and everything works fine if the motor voltage is around 5V. However if I raise the motor voltage to 9 volts I only see about 3.5 volts at the motor. The problem seems to be that the TIP120 can switch the motor to ground but it can’t switch the full 9 volts when it’s base is 5 volts. In other words the circuit labled Using TIP120 Darlington Transistor for Driving Motor works but if I move the transistor between V and the motor it doesn’t work. It looks like I need to use something like TIP125’s for the top transistors in the H-Bridge.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-834">
+<div class="comment_date_and_id"><span class="comm_date">29.06.11</span><span class="comm_id">#14</span></div>
+<p class="comment_by">Comment by <b><a href="http://rwb/" rel="external nofollow" class="url">rwb</a></b>.</p>
+<p>Yes, the all TIP120 H-Bridge circuit only work when the base and collector has the same power supply voltage. Because the top TIP120 (NPN) transistor is in common collector configuration and in order to turn ON the transistor, we need to forward bias the V<sub>BE</sub>, therefore if the base voltage is less then the collector voltage it will not turn ON. When you use the TIP125 (PNP) for the top transistor then all the transistors will have the same common emitter configuration.</p>
+<p>I will do some correction and add example on the article above, thanks for your comment.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1018">
+<div class="comment_date_and_id"><span class="comm_date">06.12.11</span><span class="comm_id">#15</span></div>
+<p class="comment_by">Comment by <b>akhb</b>.</p>
+<p>Hi there, This is a very informative post. Your hard work is very appreciated by everyone who luckily lands here.<br>
+I receive an active low error signal for a chip. The signal and Vcc on board is +5V. I want to light a blue LED if the signal is low. So I guess we use PNP transistor. I was looking at digital transistors. (they have biased resistors pre-built-in). Can you suggest something like<br>
+PDTA143E where the resistors and their ratio is all correct for +5V power supply?<br>
+Thank you in advance.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1019">
+<div class="comment_date_and_id"><span class="comm_date">06.12.11</span><span class="comm_id">#16</span></div>
+<p class="comment_by">Comment by <b><a href="http://rwb/" rel="external nofollow" class="url">rwb</a></b>.</p>
+<p>You could use any PNP potential divider type of digital transistor as long as you choose a suitable Ic max for your need.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1189">
+<div class="comment_date_and_id"><span class="comm_date">22.09.12</span><span class="comm_id">#17</span></div>
+<p class="comment_by">Comment by <b>nhokiki</b>.</p>
+<p>plz…can you help me!:<br>
+LED driver circuit design with the following parameters:<br>
+V Led = 6V<br>
+I Led = 30mA<br>
+and the temperature t*C = 65*C<br>
+with square pulse:<br>
+Vi max = 6V<br>
+Vi min = 0.5V</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1202">
+<div class="comment_date_and_id"><span class="comm_date">27.09.12</span><span class="comm_id">#18</span></div>
+<p class="comment_by">Comment by <b>thbounzer</b>.</p>
+<p>Found this article looking for something about driving transistor with a micro;<br>
+I must tell you that this post was awesome, a great work!<br>
+Detailed explanation, good photos and wonderful schemas.<br>
+By the way, give it a look on my blog, if you want, this is the address:<br>
+<a href="http://www.carlolog.net/log/" rel="nofollow">http://www.carlolog.net/log/</a><br>
+Keep going updating yours, ’cause is very nice!</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1205">
+<div class="comment_date_and_id"><span class="comm_date">29.09.12</span><span class="comm_id">#19</span></div>
+<p class="comment_by">Comment by <b>abe</b>.</p>
+<p>WOW ! this is an EXCELLENT tutorial. Well done !</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1298">
+<div class="comment_date_and_id"><span class="comm_date">21.05.13</span><span class="comm_id">#20</span></div>
+<p class="comment_by">Comment by <b>jolly</b>.</p>
+<p>hi Mr rwb<br>
+Thanks you very much for your post. Please i want to know how to use IGBT as switch? But i know how to use as inverter.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1300">
+<div class="comment_date_and_id"><span class="comm_date">27.05.13</span><span class="comm_id">#21</span></div>
+<p class="comment_by">Comment by <b><a href="http://rwb/" rel="external nofollow" class="url">rwb</a></b>.</p>
+<p>IGBT (Insulated-Gate Bipolar Transistor) basically is similar to MOSFET (Metal-Oxide Field Effect Transistor). The IGBT will turn-on (conduct current from Collector to Emitter) by applying an adequate Gate to Emitter voltage.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1302">
+<div class="comment_date_and_id"><span class="comm_date">30.05.13</span><span class="comm_id">#22</span></div>
+<p class="comment_by">Comment by <b>jolly</b>.</p>
+<p>thanks Mr.rwb<br>
+  you explained differneces between BJT and MOSFET. I want to know, how to use IGBT as amplifier? Please Mr.rwb. thanks you.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1323">
+<div class="comment_date_and_id"><span class="comm_date">04.09.13</span><span class="comm_id">#23</span></div>
+<p class="comment_by">Comment by <b>abdulr76</b>.</p>
+<p>Thanks, indeed very informative.<br>
+I would like to get some feedback/help on my circuit. I have built a vacuum pump for vacuum assisted brake system (don’t laugh :)). I am going to use digital vacuum switch to make the vacuum pump turn ON under low vacuum (below 15 inches of mercury [in Hg] ) and turn OFF under high pressure (upto 22 inches of mercury) for effective brake. I have various vacuum switches, mainly with 2 options 1. NPN Open Collector Output 2. Analog output.</p>
+<p>In order to turn ON/OFF vacuum pump motor, it should be connected to 24 volt relay for which I need to understand how to connect NPN Open Collector output with the 24 volt relay, which looks easy as compared to building a DC-DC Converter/Boost circuit which will amplify vacuum switch output voltage i.e. 2-3 volts to 24 volts. I am using SMC Vacuum switches details are as under:</p>
+<p>1. Switch Model = SMC ZSE3<br>
+Output = NPN Open Collector, 30V 80 mA or less</p>
+<p>2.Switch Model = SMC ZSE40 (BOTH OPEN C.OUT+ANALOG)<br>
+NPN or PNP 2 outputs Max. load current : 80 mA<br>
+Max. applied voltage: 30 VDC (With NPN output)<br>
+Residual voltage : 1 V or less (With 80 mA load current)</p>
+<p>ANALOG OUTPUT:<br>
+Output voltage: 1 to 5 V<br>
+±5% F.S. or less (in rated pressure range)<br>
+Linearity: ±1% F.S. or less<br>
+Output impedance: Approx. 1 kilo ohm</p>
+<p>3. Switch Model = SUNX DP2-20<br>
+Output voltage: 1 to 5 V<br>
+±5% F.S. or less (in rated pressure range)<br>
+Linearity: ±1% F.S. or less<br>
+Output impedance: Approx. 1 kilo ohm</p>
+<p>Thanking in advance.<br>
+Please reply. </p>
+<p>Regards,</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1330">
+<div class="comment_date_and_id"><span class="comm_date">05.09.13</span><span class="comm_id">#24</span></div>
+<p class="comment_by">Comment by <b><a href="http://rwb/" rel="external nofollow" class="url">rwb</a></b>.</p>
+<p>You could connect the open collector with resistor to Vcc, next connect the collector to the base of PNP or NPN transistor to drive a relay.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1365">
+<div class="comment_date_and_id"><span class="comm_date">13.01.14</span><span class="comm_id">#25</span></div>
+<p class="comment_by">Comment by <b>FlyingW</b>.</p>
+<p>Thank you…very helpful and informative.</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-1368">
+<div class="comment_date_and_id"><span class="comm_date">17.04.14</span><span class="comm_id">#26</span></div>
+<p class="comment_by">Comment by <b>xelion</b>.</p>
+<p>Thank you for an in-depth explanation on driving MOSFET’s. I Really like your way of explaining things! </p>
+<p>I’m building a high current power supply, and was having difficulties driving my MOSFET with a PWM signal. After resolving to the Darlington configuration the problem was solved!</p>
+<p>Now finally, I can continue on my project, thanks to you;)</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-3750">
+<div class="comment_date_and_id"><span class="comm_date">21.10.14</span><span class="comm_id">#27</span></div>
+<p class="comment_by">Comment by <b>vheinitz</b>.</p>
+<p>What an amount of work!<br>
+I wonder, what software do you use for making your appealing images and diagrams?</p>
+</div>
+
+
+	
+	
+<div class="comment " id="comment-13882">
+<div class="comment_date_and_id"><span class="comm_date">14.06.15</span><span class="comm_id">#28</span></div>
+<p class="comment_by">Comment by <b>chupo_cro</b>.</p>
+<p>Are you sure the direction changing algorithm is OK? Seems as it just toggles the direction every 50 ms when the result of AD conversion is more than 800!? Turning the potentiometer will:</p>
+<p>a) from ADC=0 to ADC=800 –&gt; decrease the speed of the motor </p>
+<p>b) from ADC=800 to ADC=1024 –&gt; decrease the speed of the motor + continuously (every 50 ms) toggle the direction</p>
+<p>I don’t think b) is what was intended.</p>
+</div>
+
+
+	
+	
+
+ 
+
+
+</div>
+	<div id="sidebar">
+		<ul>
+			<li id="text-353826451" class="widget widget_text"><h2 class="widgettitle">Search This Site</h2>
+			<div class="textwidget"><!-- google search -->
+<style type="text/css">
+@import url(http://www.google.com/cse/api/branding.css);
+</style>
+<div class="cse-branding-bottom" style="background-color:#FFFFEF;color:#000000">
+  <div class="cse-branding-form">
+    <form action="http://www.google.com/cse" id="cse-search-box" target="_blank">
+      <div>
+        <input type="hidden" name="cx" value="partner-pub-9787882570656893:d9u549fzzoz">
+        <input type="hidden" name="ie" value="ISO-8859-1">
+        <input type="text" name="q" size="17">
+        <input type="submit" name="sa" value="Search">
+      </div>
+    </form>
+  </div>
+  <div class="cse-branding-logo">
+    <img src="./Using Transistor as a Switch _ ermicroblog_files/poweredby_FFFFFF.gif" alt="Google">
+  </div>
+  <div class="cse-branding-text">
+    Custom Search
+  </div>
+</div>
+<!-- google search end -->
+</div>
+		</li>
+<li id="execphp-327839551" class="widget widget_execphp"><h2 class="widgettitle">Future Post</h2>
+			<div class="execphpwidget">Controlling the Motor is one of interesting topics in the embedded world especially for the robotics enthusiasts, on the next post we will learn the basic of motor electronic circuit as well as how to  control it with microcontroller.
+<p>
+Therefore don't miss it, stay tune on this blog !
+<br><br></p></div>
+		</li>
+<li id="text-373943321" class="widget widget_text">			<div class="textwidget"><script type="text/javascript"><!--
+google_ad_client = "pub-9787882570656893";
+/* 160x600, created 3/8/09 */
+google_ad_slot = "5493029339";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript" src="./Using Transistor as a Switch _ ermicroblog_files/f.txt">
+</script></div>
+		</li>
+<li id="categories-284355761" class="widget widget_categories"><h2 class="widgettitle">Categories</h2>
+<label class="screen-reader-text" for="cat">Categories</label><select name="cat" id="cat" class="postform">
+	<option value="-1">Select Category</option>
+	<option class="level-0" value="87">Blognote</option>
+	<option class="level-0" value="6">Development Board News</option>
+	<option class="level-0" value="3">Electronics</option>
+	<option class="level-0" value="4">Microcontroller</option>
+	<option class="level-0" value="42">Robotics</option>
+	<option class="level-0" value="7">Yet Another Tips</option>
+</select>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+	var dropdown = document.getElementById( "cat" );
+	function onCatChange() {
+		if ( dropdown.options[ dropdown.selectedIndex ].value > 0 ) {
+			location.href = "http://www.ermicro.com/blog/?cat=" + dropdown.options[ dropdown.selectedIndex ].value;
+		}
+	}
+	dropdown.onchange = onCatChange;
+})();
+/* ]]> */
+</script>
+
+</li>
+<li id="linkcat-2" class="widget widget_links"><h2 class="widgettitle">Blogroll</h2>
+
+	<ul class="xoxo blogroll">
+<li><a href="http://www.ermicro.com/" title="ermicro shop">ermicro shop</a></li>
+<li><a href="http://astore.amazon.com/ermicroblog-20" title="ermicroblog Amazon Store">ermicroblog Amazon Store</a></li>
+<li><a href="http://www.youtube.com/ermicroinfo" title="ermicroblog project on YouTube">ermicroblog on YouTube</a></li>
+<li><a href="http://www.metacafe.com/channels/ermicroinfo" title="ermicro video at Metacafe">ermicroblog video on Metacafe</a></li>
+
+	</ul>
+</li>
+
+<li id="archives-2" class="widget widget_archive"><h2 class="widgettitle">Archives</h2>
+		<label class="screen-reader-text" for="archives-dropdown-2">Archives</label>
+		<select id="archives-dropdown-2" name="archive-dropdown" onchange="document.location.href=this.options[this.selectedIndex].value;">
+			
+			<option value="">Select Month</option>
+				<option value="http://www.ermicro.com/blog/?m=201410"> October 2014 </option>
+	<option value="http://www.ermicro.com/blog/?m=201309"> September 2013 </option>
+	<option value="http://www.ermicro.com/blog/?m=201306"> June 2013 </option>
+	<option value="http://www.ermicro.com/blog/?m=201302"> February 2013 </option>
+	<option value="http://www.ermicro.com/blog/?m=201212"> December 2012 </option>
+	<option value="http://www.ermicro.com/blog/?m=201112"> December 2011 </option>
+	<option value="http://www.ermicro.com/blog/?m=201109"> September 2011 </option>
+	<option value="http://www.ermicro.com/blog/?m=201107"> July 2011 </option>
+	<option value="http://www.ermicro.com/blog/?m=201104"> April 2011 </option>
+	<option value="http://www.ermicro.com/blog/?m=201102"> February 2011 </option>
+	<option value="http://www.ermicro.com/blog/?m=201101"> January 2011 </option>
+	<option value="http://www.ermicro.com/blog/?m=201012"> December 2010 </option>
+	<option value="http://www.ermicro.com/blog/?m=201009"> September 2010 </option>
+	<option value="http://www.ermicro.com/blog/?m=201007"> July 2010 </option>
+	<option value="http://www.ermicro.com/blog/?m=201005"> May 2010 </option>
+	<option value="http://www.ermicro.com/blog/?m=201004"> April 2010 </option>
+	<option value="http://www.ermicro.com/blog/?m=201003"> March 2010 </option>
+	<option value="http://www.ermicro.com/blog/?m=201002"> February 2010 </option>
+	<option value="http://www.ermicro.com/blog/?m=201001"> January 2010 </option>
+	<option value="http://www.ermicro.com/blog/?m=200912"> December 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200911"> November 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200910"> October 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200909"> September 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200908"> August 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200907"> July 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200906"> June 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200905"> May 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200904"> April 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200903"> March 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200902"> February 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200901"> January 2009 </option>
+	<option value="http://www.ermicro.com/blog/?m=200812"> December 2008 </option>
+	<option value="http://www.ermicro.com/blog/?m=200811"> November 2008 </option>
+
+		</select>
+		</li>
+<li id="execphp-376744471" class="widget widget_execphp">			<div class="execphpwidget"></div>
+		</li>
+<li id="text-540372401" class="widget widget_text">			<div class="textwidget"><br>
+<script type="text/javascript"><!--
+google_ad_client = "pub-9787882570656893";
+/* 160x90, created 9/17/09 */
+google_ad_slot = "7245284029";
+google_ad_width = 160;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript" src="./Using Transistor as a Switch _ ermicroblog_files/f.txt">
+</script></div>
+		</li>
+		</ul>
+	</div>
+
+</div>
+<div id="footer">
+<p>Copyright © 2008-2021 By ermicro. Powered by <a href="http://wordpress.org/">Word Press</a>.</p>
+</div>
+</div>
+
+</body></html>
