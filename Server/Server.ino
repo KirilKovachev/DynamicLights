@@ -22,18 +22,19 @@
 #define RF_TRANSMIT_PORT 15
 #define OPTIONS_KEY_PORT 19
 #define SOUND_ANALOG_PORT 33
+#define LED_PORT 25
 const uint16_t IR_TRANSMIT = 4;
 const uint16_t IR_RECEIVE = 34;
 
 //Infrared Sender/Receiver init
 const uint16_t kCaptureBufferSize = 1024;
-const uint8_t kTimeout = 50;  // Milli-Seconds
-const uint16_t kFrequency = 38000;  // Frequency modulation in Hz
-// The IR transmitter.
+const uint8_t kTimeout = 50;  //Milli-Seconds
+const uint16_t kFrequency = 38000;  //Frequency modulation in Hz
+//The IR transmitter.
 IRsend irsend(IR_TRANSMIT);
-// The IR receiver.
+//The IR receiver.
 IRrecv irrecv(IR_RECEIVE, kCaptureBufferSize, kTimeout, false);
-// Somewhere to store the captured message.
+//Somewhere to store the captured IR message.
 decode_results results;
 
 //BLE UUIDs
@@ -50,7 +51,7 @@ BLECharacteristic *pCharacteristicTemp;
 BLECharacteristic *pCharacteristicHumidity;
 
 //MIC ADC settings
-#define NO_OF_SAMPLES   1        //Multisampling
+#define NO_OF_SAMPLES   2        //Multisampling
 
 //Audio LED variables
 int checkDelay = 5000;
@@ -62,9 +63,14 @@ uint8_t pushButtonPreviousState = LOW;
 
 //Temperature and humidity sensor variables
 #define AHTX0_I2CADDR_DEFAULT 0x38
-#define AHT10_CHECK_INTERVAL 5000
+#define AHT10_CHECK_INTERVAL 300000
 uint32_t aht10_last_checked = 0; 
 Adafruit_AHTX0 aht;
+Adafruit_Sensor *aht_humidity, *aht_temp;
+
+//LED config
+uint8_t led_brightness = 0;
+uint8_t led_fadeAmount = 5;
 
 WiFiUDP UDP;
 AsyncWebServer server(80);
@@ -167,11 +173,11 @@ void SendRF(const bool button[], uint16_t count, uint8_t pulse_lenght, uint8_t r
        delayMicroseconds(pulse_lenght);   
     }
     delayMicroseconds(41000);
-    Serial.println("SendRF Called");
+    WebSerial.println("SendRF Called");
       for(uint16_t a = 0;a < count;a++) {
-        Serial.print(button[a]);
+        WebSerial.print(button[a]);
       }
-    Serial.println("SendRF End");
+    WebSerial.println("SendRF End");
   }
 }
 
@@ -181,6 +187,13 @@ void wallLedPowerOn() {
 
 void wallLedPowerOff() {
   SendRF(rf_wall_buttonOff,583,64,4);
+}
+
+void fadeLed() {
+  analogWrite(LED_PORT, led_brightness);
+  led_broghtness += led_fadeAmount;
+  if (brightness <= 0 || brightness >= 200)
+    led_fadeAmount = -led_fadeAmount;
 }
 
 byte bleCommand = 0;
@@ -204,20 +217,17 @@ class CharacteristicCallbacks: public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *characteristic) {
     std::string rxCharacteristicID = characteristic->getUUID().toString();
     std::string rxValue = characteristic->getValue();
-    Serial.printf("Received callback for Characteristics: %s \n", rxCharacteristicID.c_str());
+    WebSerial.print("Received callback for Characteristics: "); WebSerial.println(rxCharacteristicID.c_str());
     if (rxValue.length() > 0) {
-      for (int i = 0; i < rxValue.length(); i++) {
-        Serial.print(rxValue[i]);
-      }
-      Serial.println();
+      WebSerial.println(rxValue.c_str());
       if (rxCharacteristicID == CHARACTERISTIC_UUID_RF) {
-        Serial.println("Processing RF received by BLE");
+        WebSerial.println("Processing RF received by BLE");
         if (rxValue.find("L1") != -1) bleCommand = 1; //PowerOn Window LED Stripe
         if (rxValue.find("L2") != -1) bleCommand = 2; //PowerOff Window LED Stripe
         if (rxValue.find("L3") != -1) bleCommand = 3;
       }
       if (rxCharacteristicID == CHARACTERISTIC_UUID_RF_RAW) {
-        Serial.println("Processing RAW RF received by BLE");
+        WebSerial.println("Processing RAW RF received by BLE");
         bool rf_data[583];
         char *token, *str, *tofree;
         tofree = str = strdup(rxValue.c_str());  // We own str's memory now.
@@ -231,17 +241,17 @@ class CharacteristicCallbacks: public BLECharacteristicCallbacks {
         }
         free(tofree);
         if (!rf_convert_error) {
-          for(int i=0;i<rf_index;i++) Serial.printf("Sending RF data: %f \n", rf_data[rf_index]);
-          Serial.println();
+          for(int i=0;i<rf_index;i++) { WebSerial.print("Sending RF data: "); WebSerial.print(rf_data[rf_index]); }
+          WebSerial.println();
           SendRF(rf_data,583,64,4);
         }
         else
-          Serial.printf("Error converting RF data: %s \n", rxValue);
+          WebSerial.print("Error converting RF data: "); WebSerial.println(rxValue.c_str());
       }
       //Handle IR Send commands
       //BLE IR RAW
       if (rxCharacteristicID == CHARACTERISTIC_UUID_BLE_IR_RAW) {
-        Serial.println("Processing RAW IR received by BLE");
+        WebSerial.println("Processing RAW IR received by BLE");
         bleCommand = 20;
         uint16_t ir_data[300];
         char *token, *str, *tofree;
@@ -256,12 +266,12 @@ class CharacteristicCallbacks: public BLECharacteristicCallbacks {
         }
         free(tofree);
         if (!ir_convert_error) {
-          for(int i=0;i<ir_index;i++) Serial.printf("Sending IR data: %f \n", ir_data[ir_index]);
-          Serial.println();
+          for(int i=0;i<ir_index;i++) { WebSerial.print("Sending IR data: ");WebSerial.print(ir_data[ir_index]); }
+          WebSerial.println();
           irsend.sendRaw(ir_data, ir_index , kFrequency);
         }
         else
-          Serial.printf("Error converting IR data: %s \n", rxValue);
+          WebSerial.print("Error converting IR data: "); WebSerial.println(rxValue.c_str());
       }
     }
   }//onWrite
@@ -317,10 +327,6 @@ void setup() {
 
   ArduinoOTA.begin();
 
-  Serial.println("OTA init ready");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-
   //Initialize GPIO ports
   pinMode(RF_RECEIVE_PORT, INPUT);
   pinMode(RF_TRANSMIT_PORT, OUTPUT);
@@ -328,12 +334,16 @@ void setup() {
   pinMode(SOUND_ANALOG_PORT, INPUT);
   pinMode(IR_RECEIVE, INPUT);
   pinMode(IR_TRANSMIT, OUTPUT);
+  pinMode(LED_PORT, OUTPUT);
 
   //Mic ADC Setup
   adc_setup();
 
-  irrecv.enableIRIn();  // Start up the IR receiver.
-  irsend.begin();       // Start up the IR sender.
+  //Start up the IR receiver
+  irrecv.enableIRIn();
+  
+  //Start up the IR sender
+  irsend.begin();
 
   //BLE Setup
   BLEDevice::init("dynamicLights");
@@ -381,10 +391,10 @@ void setup() {
   pDescriptorHumidity.setValue("Humidity % rH");
   pCharacteristicHumidity->addDescriptor(&pDescriptorHumidity);
 
-  // set temperature BLE characteristic
+  //set temperature BLE characteristic
   pService->addCharacteristic(pCharacteristicTemp);
   
-  // set humidity  BLE characteristic
+  //set humidity  BLE characteristic
   pService->addCharacteristic(pCharacteristicHumidity);
 
   pCharacteristicRF->setCallbacks(new CharacteristicCallbacks());
@@ -404,10 +414,15 @@ void setup() {
 
   //init aht
    while (! aht.begin()) {
-    WebSerial.println("Could not find AHT. Check wiring...");
+    Serial.println("Could not find AHT10. Check wiring...");
     delay(1000);
   }
-  WebSerial.println("AHT10 found");
+  Serial.println("AHT10 found");
+  aht_temp = aht.getTemperatureSensor();
+  aht_temp->printSensorDetails();
+
+  aht_humidity = aht.getHumiditySensor();
+  aht_humidity->printSensorDetails();
   
 }
 
@@ -418,8 +433,8 @@ void loop() {
 
   // bluetooth commands
   if (bleDeviceConnected) {
-     if(bleCommand == 1) {wallLedPowerOn();bleCommand=0;rf_wall_led_on=true;WebSerial.println("Led On");}
-     if(bleCommand == 2) {wallLedPowerOff();bleCommand=0;rf_wall_led_on=false;WebSerial.println("Led Off");}
+     if(bleCommand == 1) {wallLedPowerOn();bleCommand=0;rf_wall_led_on=true;WebSerial.println("Wall led on");}
+     if(bleCommand == 2) {wallLedPowerOff();bleCommand=0;rf_wall_led_on=false;WebSerial.println("Wall led off");}
      if(bleCommand == 20) { }
   }
 
@@ -447,9 +462,13 @@ void loop() {
   }
 
   // temperature and humidity sensor
-  if(aht10_last_checked < millis() - AHT10_CHECK_INTERVAL) {
+  if(millis() > aht10_last_checked + AHT10_CHECK_INTERVAL) {
     //read temp and humidity
-    aht.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
+    sensors_event_t humidity;
+    sensors_event_t temp;
+    aht_humidity->getEvent(&humidity);
+    aht_temp->getEvent(&temp);
+    
     //Print current values to console
     WebSerial.print("Temperature: "); WebSerial.print(temp.temperature); WebSerial.println(" degrees C");
     WebSerial.print("Humidity: "); WebSerial.print(humidity.relative_humidity); WebSerial.println("% rH");
@@ -465,7 +484,7 @@ void loop() {
       pCharacteristicHumidity->setValue(humidityRH);
       pCharacteristicHumidity->notify();
     } else if(bleDeviceConnected != bleDeviceConnectedLastState) { 
-        Serial.println("BLE device disconnected");
+        WebSerial.println("BLE device disconnected");
         BLEDevice::startAdvertising();
     }
     aht10_last_checked = millis();
@@ -488,6 +507,7 @@ void loop() {
       readHeartBeats();
       analogRaw = analogRead(SOUND_ANALOG_PORT);
       sendLedData(analogRaw, opMode);
+      fadeLed();
       break;
     //light modes - opMode 3-6
     case 3:
@@ -544,9 +564,9 @@ void readHeartBeats() {
   if (packetSize == sizeof(hbm)) {
     UDP.read((char *)&hbm, sizeof(hbm));
     if (hbm.client_id > NUMBER_OF_CLIENTS - 1) {
-      Serial.printf("Error: invalid client_id received: %d", hbm.client_id);
+      WebSerial.print("Error: invalid client_id received: "); WebSerial.println(hbm.client_id);
     } else {
-      if (heartbeats[hbm.client_id].connected == false) Serial.printf("Client with ID: %d and IP: %s is now connected.\n", hbm.client_id, heartbeats[hbm.client_id].IP.toString());
+      if (heartbeats[hbm.client_id].connected == false) WebSerial.print("Client connected - ID: "); WebSerial.print(hbm.client_id); WebSerial.print(", IP: "); WebSerial.println(heartbeats[hbm.client_id].IP.toString());
       heartbeats[hbm.client_id].IP = hbm.IP;
       heartbeats[hbm.client_id].connected = true;
       heartbeats[hbm.client_id].lastchecked = millis();
@@ -558,7 +578,7 @@ void invalidateHeartBeats() {
   for (int i = 0; i < NUMBER_OF_CLIENTS - 1; i++) {
     // Invalidate heartbeat if checkDelay is passed
     if ((millis() - heartbeats[i].lastchecked > checkDelay) && heartbeats[i].connected == true)  {
-        Serial.printf("Invalidating HB. Current time is: %d. HB last received for Client with ID: %d and IP: %s at: %d \n",millis(), i, heartbeats[i].IP.toString(), heartbeats[i].lastchecked);
+        WebSerial.print("Invalidating HB. Current time is: "); WebSerial.print(String(millis())); WebSerial.print(" Client ID: "); WebSerial.print(i); WebSerial.print(", IP: "); WebSerial.println(heartbeats[i].IP.toString());
         heartbeats[i].connected = false;
     }
   }
@@ -569,5 +589,5 @@ void buttonClicked() {
     opMode = 0;
   else
     opMode++;
-  Serial.printf("Setting opmode %d \n", opMode);
+  WebSerial.print("Setting opmode: "); WebSerial.println(opMode);
 }

@@ -1,0 +1,2 @@
+ir transmitter - hx-53
+ir receiver - hx-m1
